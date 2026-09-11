@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eder Yepez Cuevas — Game &amp; UX Design, Software Engineering</title>
+<meta name="description" content="Portfolio of Eder Yepez Cuevas: game development, front-end engineering, and user-centered design.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="site-name" href="#top">Eder Yepez Cuevas</a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="site-nav" id="siteNav">
+    <a href="#work">Work</a>
+    <a href="#accessibility">Accessibility</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>I design and build the systems inside a game, and the interfaces that make them make sense.</h1>
+      <p class="hero-sub">B.S. Computer Science: Computer Game Design, UC Santa Cruz, 2026. My main project, Magetender, took six months of interdisciplinary work to ship — the combat systems, the UI, and every accessibility feature in the game were mine to design.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="assets/resume.pdf">View resume</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 360 420" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="180" cy="392" rx="120" ry="14" fill="#211D14" opacity="0.08"/>
+        <path d="M150 60 L150 150 Q150 165 138 178 L108 208 Q92 224 92 248 L92 340 Q92 366 118 366 L242 366 Q268 366 268 340 L268 248 Q268 224 252 208 L222 178 Q210 165 210 150 L210 60 Z"
+          fill="#F3EEDD" stroke="#2F4A3C" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M100 260 Q180 236 260 260 L268 340 Q268 366 242 366 L118 366 Q92 366 92 340 Z" fill="#C68A2E" opacity="0.9"/>
+        <path d="M100 260 Q180 236 260 260" fill="none" stroke="#8a5c1f" stroke-width="3" opacity="0.5"/>
+        <rect x="140" y="42" width="80" height="22" rx="4" fill="#2F4A3C"/>
+        <rect x="150" y="24" width="60" height="22" rx="3" fill="#2F4A3C"/>
+        <circle cx="180" cy="300" r="10" fill="#F3EEDD" opacity="0.85"/>
+        <circle cx="205" cy="320" r="6" fill="#F3EEDD" opacity="0.7"/>
+        <circle cx="155" cy="325" r="5" fill="#F3EEDD" opacity="0.7"/>
+        <g stroke="#C68A2E" stroke-width="4" stroke-linecap="round">
+          <line x1="60" y1="70" x2="60" y2="94"/>
+          <line x1="48" y1="82" x2="72" y2="82"/>
+        </g>
+        <g stroke="#2F4A3C" stroke-width="4" stroke-linecap="round">
+          <line x1="300" y1="120" x2="300" y2="140"/>
+          <line x1="290" y1="130" x2="310" y2="130"/>
+        </g>
+        <circle cx="292" cy="70" r="5" fill="#6B3B4F"/>
+        <circle cx="70" cy="150" r="4" fill="#6B3B4F"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2 class="section-label">About</h2>
+    <div class="about-body">
+      <p>I'm Eder, based in Lodi, California. My background is full-stack game and software development — Unity and C#, React and JavaScript, hands-on work with LLM APIs — but the thread through all of it is the same: understanding who is actually using a system before deciding how it should look or work. I've also applied and evaluated LLM APIs from Anthropic, OpenAI, and Gemini, and built an evaluation framework for comparing model output, work that runs alongside the game and UI design below.</p>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h3>Design</h3>
+          <ul class="chips">
+            <li>User research</li>
+            <li>Information architecture</li>
+            <li>Wireframing &amp; prototyping</li>
+            <li>Accessibility design</li>
+            <li>Playtesting &amp; iteration</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>Engineering</h3>
+          <ul class="chips">
+            <li>Unity / C#</li>
+            <li>React</li>
+            <li>JavaScript / TypeScript</li>
+            <li>Python</li>
+            <li>Git</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>Tools</h3>
+          <ul class="chips">
+            <li>Shader Graph</li>
+            <li>Blender</li>
+            <li>Adobe</li>
+            <li>FL Studio</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <h2 class="section-label">Selected work</h2>
+
+    <article class="project">
+      <div class="project-head">
+        <h3>Magetender</h3>
+        <p class="project-meta">Unity (URP) / C# / 2025 &ndash; present</p>
+      </div>
+      <p class="project-intro">Magetender is a 2D fantasy game about a wizard-school dropout running a bar: mixing magical drinks to match a customer's mood, and defending the bar with a quick-time spell system when an order goes badly. I built it over six months with an interdisciplinary team, Team TAAAZED, handling systems design, UI, and every accessibility feature end to end.</p>
+
+      <div class="project-split">
+        <div class="project-notes">
+          <h4>Design &amp; systems</h4>
+          <ul>
+            <li>Designed the quick-time combat manager: input sequences, hit/miss resolution, and per-enemy behavior.</li>
+            <li>Built a JSON-driven monster and content pipeline, so new enemies and dialogue can be added without touching code.</li>
+            <li>Rebuilt the game's Fantasy Meter UI as a Shader Graph-based shader that scales cleanly at any resolution, replacing an older sprite-swap version.</li>
+            <li>Set up a persistent AudioManager so combat music transitions cleanly between game states.</li>
+          </ul>
+        </div>
+        <div class="project-diagram" aria-hidden="true">
+          <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="#2F4A3C"/>
+              </marker>
+            </defs>
+            <g font-family="IBM Plex Mono" font-size="12" fill="#211D14">
+              <rect x="10" y="14" width="120" height="40" rx="3" fill="none" stroke="#2F4A3C" stroke-width="2"/>
+              <text x="70" y="38" text-anchor="middle">Order placed</text>
+
+              <rect x="10" y="90" width="120" height="40" rx="3" fill="none" stroke="#2F4A3C" stroke-width="2"/>
+              <text x="70" y="114" text-anchor="middle">Drink mixed</text>
+
+              <rect x="190" y="90" width="120" height="40" rx="3" fill="#C68A2E" opacity="0.18" stroke="#C68A2E" stroke-width="2"/>
+              <text x="250" y="114" text-anchor="middle">Mood match</text>
+
+              <rect x="10" y="166" width="120" height="40" rx="3" fill="none" stroke="#2F4A3C" stroke-width="2"/>
+              <text x="70" y="184" text-anchor="middle">Miss</text>
+              <text x="70" y="198" text-anchor="middle">(JSON enemy data)</text>
+
+              <rect x="190" y="166" width="120" height="40" rx="3" fill="#6B3B4F" opacity="0.15" stroke="#6B3B4F" stroke-width="2"/>
+              <text x="250" y="184" text-anchor="middle">QTE combat</text>
+            </g>
+            <line x1="70" y1="54" x2="70" y2="90" stroke="#2F4A3C" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="130" y1="110" x2="190" y2="110" stroke="#2F4A3C" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="70" y1="130" x2="70" y2="166" stroke="#2F4A3C" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="130" y1="186" x2="190" y2="186" stroke="#2F4A3C" stroke-width="2" marker-end="url(#arrow)"/>
+          </svg>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="accessibility" id="accessibility">
+    <div class="accessibility-inner">
+      <h2 class="section-label section-label-light">Accessibility &amp; player-centered design</h2>
+      <p class="accessibility-intro">Six months of interdisciplinary work meant constantly asking who our players actually were and what they needed from the interface, not just what looked good. I owned accessibility for Magetender end to end.</p>
+      <ul class="accessibility-list">
+        <li>Localized the game into Spanish and Arabic (interface and subtitles), catching and fixing translation issues along the way.</li>
+        <li>Designed full controller support, including a custom virtual-mouse system for menu navigation without a mouse.</li>
+        <li>Built colorblind-accessible UI and gameplay feedback.</li>
+        <li>Designed one-handed and touch-friendly controls, and re-tested them by hand through every new feature and version to confirm the game stayed playable one-handed.</li>
+        <li>Led sound accessibility for the game.</li>
+      </ul>
+      <p class="accessibility-close">Every one of these went through repeated rounds of testing as the game changed, not a single pass at launch.</p>
+      <a class="steam-link" href="https://store.steampowered.com/app/4709570/MageTender/">Wishlist Magetender on Steam</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" id="contact">
+  <h2 class="section-label">Get in touch</h2>
+  <p class="footer-lede">Say hello.</p>
+  <p class="footer-text">I'm looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
+  <ul class="footer-links">
+    <li><a href="mailto:ederyepe777@gmail.com">ederyepe777@gmail.com</a></li>
+    <li><a href="https://linkedin.com/in/eder-yepez-cuevas-260156210">LinkedIn</a></li>
+    <li><a href="https://github.com/ederyc">GitHub</a></li>
+    <li><a href="https://store.steampowered.com/app/4709570/MageTender/">Steam</a></li>
+  </ul>
+  <p class="footer-fine">Eder Yepez Cuevas — Lodi, CA</p>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
