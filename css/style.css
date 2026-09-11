@@ -169,11 +169,22 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .section-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--ink-soft);
+}
+
+.section-icon svg.icon-pixel {
   width: 24px;
   height: 24px;
   fill: currentColor;
+  stroke: none;
   shape-rendering: crispEdges;
-  color: var(--ink-soft);
 }
 
 .section-link:disabled .section-icon svg { color: var(--ink-faint); }
@@ -227,9 +238,20 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .category-icon svg {
+  width: 46%;
+  height: 46%;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.category-icon svg.icon-pixel {
   width: 52%;
   height: 52%;
   fill: var(--gold);
+  stroke: none;
   shape-rendering: crispEdges;
 }
 
@@ -239,6 +261,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   min-height: 1px;
   color: var(--ink-soft);
   font-size: 16px;
+}
+
+.category-empty {
+  margin-top: 56px;
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 15px;
 }
 
 .project-list {

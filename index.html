@@ -42,34 +42,13 @@
       <rect x="4" y="11" width="16" height="1"/>
       <rect x="6" y="12" width="12" height="1"/>
     </symbol>
-    <symbol id="icon-note" viewBox="0 0 14 18" fill="currentColor">
-      <rect x="6" y="1" width="2" height="1"/>
-      <rect x="6" y="2" width="6" height="1"/>
-      <rect x="6" y="3" width="5" height="1"/>
-      <rect x="6" y="4" width="4" height="1"/>
-      <rect x="6" y="5" width="3" height="1"/>
-      <rect x="6" y="6" width="2" height="6"/>
-      <rect x="3" y="12" width="5" height="1"/>
-      <rect x="2" y="13" width="6" height="3"/>
-      <rect x="3" y="16" width="4" height="1"/>
+    <symbol id="icon-note" viewBox="0 0 48 48">
+      <circle cx="16" cy="34" r="5.5"/>
+      <path d="M21.3 34V11.5l14 5v6.5"/>
+      <path d="M21.3 16.5 35.3 21.5"/>
     </symbol>
-    <symbol id="icon-uxui" viewBox="0 0 14 16" fill="currentColor">
-      <rect x="0" y="0" width="1" height="1"/>
-      <rect x="0" y="1" width="2" height="1"/>
-      <rect x="0" y="2" width="3" height="1"/>
-      <rect x="0" y="3" width="4" height="1"/>
-      <rect x="0" y="4" width="5" height="1"/>
-      <rect x="0" y="5" width="6" height="1"/>
-      <rect x="0" y="6" width="7" height="1"/>
-      <rect x="0" y="7" width="8" height="1"/>
-      <rect x="0" y="8" width="9" height="1"/>
-      <rect x="0" y="9" width="5" height="1"/>
-      <rect x="0" y="10" width="3" height="1"/>
-      <rect x="5" y="10" width="3" height="1"/>
-      <rect x="5" y="11" width="4" height="1"/>
-      <rect x="6" y="12" width="4" height="1"/>
-      <rect x="7" y="13" width="4" height="1"/>
-      <rect x="8" y="14" width="3" height="1"/>
+    <symbol id="icon-uxui" viewBox="0 0 48 48">
+      <path d="M13 9 34 27.5 24 29 30 40.5 25 43 19.5 31.5 12.5 38.5Z" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
@@ -92,21 +71,21 @@
           <ul class="sections-list">
             <li>
               <a class="section-link" href="#game-design">
-                <span class="section-icon"><svg aria-hidden="true"><use href="#icon-controller"></use></svg></span>
+                <span class="section-icon"><svg class="icon-pixel" aria-hidden="true"><use href="#icon-controller"></use></svg></span>
                 <span class="section-name">Game Design</span>
               </a>
             </li>
             <li>
-              <button class="section-link" type="button" disabled aria-label="Music/Sound Design — coming soon">
+              <a class="section-link" href="#music-design">
                 <span class="section-icon"><svg aria-hidden="true"><use href="#icon-note"></use></svg></span>
                 <span class="section-name">Music/Sound Design</span>
-              </button>
+              </a>
             </li>
             <li>
-              <button class="section-link" type="button" disabled aria-label="UX/UI — coming soon">
+              <a class="section-link" href="#ux-ui">
                 <span class="section-icon"><svg aria-hidden="true"><use href="#icon-uxui"></use></svg></span>
                 <span class="section-name">UX/UI</span>
-              </button>
+              </a>
             </li>
           </ul>
         </nav>
@@ -119,7 +98,7 @@
 
     <div class="category-icon-wrap">
       <div class="category-icon" data-spin-icon>
-        <svg aria-hidden="true"><use href="#icon-controller"></use></svg>
+        <svg class="icon-pixel" aria-hidden="true"><use href="#icon-controller"></use></svg>
       </div>
     </div>
 
@@ -138,6 +117,34 @@
         </div>
       </article>
     </div>
+  </section>
+
+  <section class="category" id="music-design">
+    <h2 class="category-title">Music/Sound Design</h2>
+
+    <div class="category-icon-wrap">
+      <div class="category-icon" data-spin-icon>
+        <svg aria-hidden="true"><use href="#icon-note"></use></svg>
+      </div>
+    </div>
+
+    <p class="category-intro"></p>
+
+    <p class="category-empty">More coming soon.</p>
+  </section>
+
+  <section class="category" id="ux-ui">
+    <h2 class="category-title">UX/UI</h2>
+
+    <div class="category-icon-wrap">
+      <div class="category-icon" data-spin-icon>
+        <svg aria-hidden="true"><use href="#icon-uxui"></use></svg>
+      </div>
+    </div>
+
+    <p class="category-intro"></p>
+
+    <p class="category-empty">More coming soon.</p>
   </section>
 
 </main>
