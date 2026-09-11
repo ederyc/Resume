@@ -1,7 +1,8 @@
 # Eder Yepez Cuevas — Portfolio
 
-A single-page portfolio site: hero intro, about/skills, a featured project
-(Magetender), a dedicated accessibility/UX section, and contact links.
+A single-page portfolio site: a photo/bio intro with a "Sections" index
+(Game Design, Music/Sound Design, UX/UI), horizontal per-section pages —
+currently just Game Design, featuring Magetender — and contact links.
 
 No build step, no dependencies. Plain HTML, CSS, and JS.
 
@@ -31,15 +32,22 @@ Then visit `http://localhost:8000`.
 
 - **Resume:** `assets/resume.pdf` is the UX-framed resume already built.
   Swap in a different file (keep the name `resume.pdf`, or update the link
-  in `index.html`) whenever you want to update what "View resume" downloads.
-- **Contact info:** the footer currently lists email, LinkedIn, GitHub, and
-  the Magetender Steam page. Your phone number is deliberately left off the
-  public site to cut down on scraping/spam — add it if you'd rather it be
-  there.
-- **Adding more projects:** the "Selected work" section (`#work` in
-  `index.html`) currently holds one `<article class="project">` block for
-  Magetender. Duplicate that block's structure for additional projects
-  (FlowDock, the web/React projects) whenever they're ready to show.
+  in `index.html`) whenever you want to update what the footer's "Resume"
+  link downloads.
+- **Contact info:** the footer currently lists resume, email, LinkedIn,
+  GitHub, and the Magetender Steam page. Your phone number is deliberately
+  left off the public site to cut down on scraping/spam — add it if you'd
+  rather it be there.
+- **Adding more projects:** each project inside a category section
+  (`#game-design` in `index.html`) is an `<article class="project-row">`
+  with a square `.project-image` and `.project-copy` text block. Duplicate
+  that structure for more Game Design projects, and add new `<section
+  class="category">` blocks (with a matching entry in `.sections-list`)
+  for Music/Sound Design and UX/UI (FlowDock, the web/React projects) when
+  they're ready to show.
+- **Project images:** `.project-image` is currently a dashed placeholder box.
+  Replace its inner `<span>` with an `<img>` once real project screenshots
+  exist.
 - **Fonts:** the page loads Fraunces, IBM Plex Sans, and IBM Plex Mono from
   Google Fonts over the network, so they'll render correctly once hosted
   live but may not load without an internet connection.
