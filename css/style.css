@@ -131,17 +131,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .sections-list {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 18px 34px;
 }
 
 .section-link {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
-  background: none;
-  border: none;
-  padding: 0;
+  gap: 12px;
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 6px 22px 6px 6px;
   margin: 0;
   font-family: var(--sans);
   text-align: left;
@@ -149,6 +153,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   cursor: pointer;
   color: var(--ink);
   width: fit-content;
+  transform: scale(1);
+  transform-origin: bottom center;
+  transition: transform 0.15s ease-out, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+  perspective: 500px;
 }
 
 .section-link:disabled {
@@ -160,17 +169,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1.5px solid var(--line-strong);
   flex-shrink: 0;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .section-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.4;
@@ -180,8 +188,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .section-icon svg.icon-pixel {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   fill: currentColor;
   stroke: none;
   shape-rendering: crispEdges;
@@ -189,9 +197,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .section-link:disabled .section-icon svg { color: var(--ink-faint); }
 
-.section-link:not(:disabled):hover .section-icon,
-.section-link:not(:disabled):focus-visible .section-icon {
+.section-link:not(:disabled):hover,
+.section-link:not(:disabled):focus-visible {
   border-color: var(--gold);
+  box-shadow: 0 10px 24px -8px rgba(217, 164, 65, 0.4);
+  z-index: 2;
 }
 
 .section-link:not(:disabled):hover .section-icon svg,
@@ -202,6 +212,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .section-name {
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 /* ---------- Category sections ---------- */
@@ -399,4 +410,5 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .category-icon { transition: none !important; }
+  .section-link { transition: border-color 0.2s ease, box-shadow 0.2s ease !important; }
 }
