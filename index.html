@@ -8,11 +8,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<a class="skip-link" href="#game-design">Skip to content</a>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
 <!-- Icon sprite: decorative, referenced via <use> -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -53,43 +54,53 @@
   </defs>
 </svg>
 
-<main>
+<header class="site-header">
+  <a class="site-header-name" href="#top">Eder Yepez Cuevas</a>
+  <nav class="site-header-nav" aria-label="Primary">
+    <a class="site-header-link" href="#top"><span>About</span></a>
+    <a class="site-header-link" href="assets/resume.pdf"><span>Resume</span></a>
+  </nav>
+</header>
+
+<main id="main-content" tabindex="-1">
 
   <section class="intro" id="top">
-    <div class="intro-grid">
-      <div class="intro-photo">
-        <img src="assets/images/profile.jpg" alt="Portrait of Eder Yepez Cuevas" width="800" height="1202">
-      </div>
-      <div class="intro-content">
-        <h1 class="intro-name">Eder Yepez Cuevas</h1>
-        <p class="intro-bio">I'm Eder, a game developer and designer based in Lodi, California, with a background in full-stack engineering, UX design, and game systems. I start every project by asking who's going to use it and what they actually need, then work backward from there, through wireframes, prototypes, and repeated rounds of testing.</p>
+    <div class="intro-hero">
+      <h1 class="intro-headline">
+        <span class="intro-greeting intro-anim" style="animation-delay: 0ms;">Hey!</span>
+        <span class="intro-photo-wrap intro-anim" style="animation-delay: 100ms;">
+          <img class="intro-photo" src="assets/images/profile.jpg" alt="Portrait of Eder Yepez Cuevas" width="800" height="1202">
+        </span>
+        <span class="intro-greeting intro-anim" style="animation-delay: 200ms;">I&rsquo;m Eder</span>
+      </h1>
 
-        <hr class="divider">
+      <p class="intro-bio intro-anim" style="animation-delay: 320ms;">I'm Eder, a game developer and designer based in Lodi, California, with a background in full-stack engineering, UX design, and game systems. I start every project by asking who's going to use it and what they actually need, then work backward from there, through wireframes, prototypes, and repeated rounds of testing.</p>
 
-        <nav class="sections-nav" aria-label="Portfolio sections">
-          <span class="sections-label">Sections</span>
-          <ul class="sections-list">
-            <li>
-              <a class="section-link" href="#game-design">
-                <span class="section-icon"><svg class="icon-pixel" aria-hidden="true"><use href="#icon-controller"></use></svg></span>
-                <span class="section-name">Game Design</span>
-              </a>
-            </li>
-            <li>
-              <a class="section-link" href="#music-design">
-                <span class="section-icon"><svg aria-hidden="true"><use href="#icon-note"></use></svg></span>
-                <span class="section-name">Music/Sound Design</span>
-              </a>
-            </li>
-            <li>
-              <a class="section-link" href="#ux-ui">
-                <span class="section-icon"><svg aria-hidden="true"><use href="#icon-uxui"></use></svg></span>
-                <span class="section-name">UX/UI</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <hr class="divider intro-anim" style="animation-delay: 380ms;">
+
+      <nav class="sections-nav intro-anim" style="animation-delay: 420ms;" aria-label="Portfolio sections">
+        <span class="sections-label">Sections</span>
+        <ul class="sections-list">
+          <li>
+            <a class="section-link" href="#game-design">
+              <span class="section-icon"><svg class="icon-pixel" aria-hidden="true"><use href="#icon-controller"></use></svg></span>
+              <span class="section-name">Game Design</span>
+            </a>
+          </li>
+          <li>
+            <a class="section-link" href="#music-design">
+              <span class="section-icon"><svg aria-hidden="true"><use href="#icon-note"></use></svg></span>
+              <span class="section-name">Music/Sound Design</span>
+            </a>
+          </li>
+          <li>
+            <a class="section-link" href="#ux-ui">
+              <span class="section-icon"><svg aria-hidden="true"><use href="#icon-uxui"></use></svg></span>
+              <span class="section-name">UX/UI</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>
 
@@ -106,9 +117,9 @@
 
     <div class="project-list">
       <article class="project-row">
-        <div class="project-image">
-          <span>Project image<br>coming soon</span>
-        </div>
+        <a class="project-image" href="magetender.html" aria-label="View Magetender project page">
+          <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" loading="lazy" width="460" height="215">
+        </a>
         <div class="project-copy">
           <h3>Magetender</h3>
           <p class="project-meta">Unity (URP) / C# / 2025&ndash;present</p>
@@ -147,6 +158,108 @@
     <p class="category-empty">More coming soon.</p>
   </section>
 
+  <section class="design-system" id="design-system">
+    <h2 class="ds-title">How this site is built</h2>
+    <p class="ds-lede">This page runs on a small set of CSS custom properties for color, type, spacing, and motion. Nothing below is a mockup, it's pulled straight from the tokens the rest of the site actually uses.</p>
+
+    <div class="ds-block">
+      <h3>Color</h3>
+      <ul class="ds-swatches">
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--bg);"></span>
+          <span class="ds-swatch-name">Background</span>
+          <span class="ds-swatch-var">--bg</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--bg-raised);"></span>
+          <span class="ds-swatch-name">Raised surface</span>
+          <span class="ds-swatch-var">--bg-raised</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--ink);"></span>
+          <span class="ds-swatch-name">Ink</span>
+          <span class="ds-swatch-var">--ink</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--ink-soft);"></span>
+          <span class="ds-swatch-name">Ink, soft</span>
+          <span class="ds-swatch-var">--ink-soft</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--ink-faint);"></span>
+          <span class="ds-swatch-name">Ink, faint</span>
+          <span class="ds-swatch-var">--ink-faint</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--line);"></span>
+          <span class="ds-swatch-name">Line</span>
+          <span class="ds-swatch-var">--line</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--line-strong);"></span>
+          <span class="ds-swatch-name">Line, strong</span>
+          <span class="ds-swatch-var">--line-strong</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--green);"></span>
+          <span class="ds-swatch-name">Accent, green</span>
+          <span class="ds-swatch-var">--green</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--gold);"></span>
+          <span class="ds-swatch-name">Accent, gold</span>
+          <span class="ds-swatch-var">--gold</span>
+        </li>
+        <li class="ds-swatch">
+          <span class="ds-swatch-color" style="background: var(--plum);"></span>
+          <span class="ds-swatch-name">Accent, plum</span>
+          <span class="ds-swatch-var">--plum</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ds-block">
+      <h3>Type</h3>
+      <div class="ds-type-row">
+        <span class="ds-sample ds-sample-serif">Fraunces</span>
+        <span class="ds-type-meta">Headings &middot; serif &middot; 600</span>
+      </div>
+      <div class="ds-type-row">
+        <span class="ds-sample ds-sample-sans">IBM Plex Sans</span>
+        <span class="ds-type-meta">Body &middot; sans &middot; 400/500</span>
+      </div>
+      <div class="ds-type-row">
+        <span class="ds-sample ds-sample-mono">IBM Plex Mono</span>
+        <span class="ds-type-meta">Labels &amp; meta &middot; mono &middot; 400/500</span>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <h3>Spacing</h3>
+      <ul class="ds-spacing">
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-1);"></span><span class="ds-spacing-label">--space-1 &middot; 8px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-2);"></span><span class="ds-spacing-label">--space-2 &middot; 12px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-3);"></span><span class="ds-spacing-label">--space-3 &middot; 16px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-4);"></span><span class="ds-spacing-label">--space-4 &middot; 24px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-5);"></span><span class="ds-spacing-label">--space-5 &middot; 32px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-6);"></span><span class="ds-spacing-label">--space-6 &middot; 48px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-7);"></span><span class="ds-spacing-label">--space-7 &middot; 64px</span></li>
+        <li class="ds-spacing-row"><span class="ds-spacing-bar" style="width: var(--space-8);"></span><span class="ds-spacing-label">--space-8 &middot; 96px</span></li>
+      </ul>
+    </div>
+
+    <div class="ds-block">
+      <h3>Interactive states</h3>
+      <p class="ds-note-sm">Tab to the first button to see the focus ring, hover it to see the border shift. The second one is a real disabled button using the native <code>disabled</code> attribute, not just styled to look greyed out.</p>
+      <div class="ds-states">
+        <button type="button" class="ds-demo-btn">Primary action</button>
+        <button type="button" class="ds-demo-btn" disabled>Disabled</button>
+      </div>
+    </div>
+
+    <p class="ds-source">Full source on <a href="https://github.com/ederyc">GitHub</a>.</p>
+  </section>
+
 </main>
 
 <footer class="site-footer" id="contact">
@@ -154,11 +267,11 @@
   <p class="footer-lede">Say hello.</p>
   <p class="footer-text">I'm looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
   <ul class="footer-links">
-    <li><a href="assets/resume.pdf">Resume</a></li>
-    <li><a href="mailto:ederyepe777@gmail.com">ederyepe777@gmail.com</a></li>
-    <li><a href="https://linkedin.com/in/eder-yepez-cuevas-260156210">LinkedIn</a></li>
-    <li><a href="https://github.com/ederyc">GitHub</a></li>
-    <li><a href="https://store.steampowered.com/app/4709570/MageTender/">Steam</a></li>
+    <li><a href="assets/resume.pdf"><span>Resume</span></a></li>
+    <li><a href="mailto:ederyepe777@gmail.com"><span>ederyepe777@gmail.com</span></a></li>
+    <li><a href="https://linkedin.com/in/eder-yepez-cuevas-260156210"><span>LinkedIn</span></a></li>
+    <li><a href="https://github.com/ederyc"><span>GitHub</span></a></li>
+    <li><a href="https://store.steampowered.com/app/4709570/MageTender/"><span>Steam</span></a></li>
   </ul>
   <p class="footer-fine">Eder Yepez Cuevas — Lodi, CA</p>
 </footer>

@@ -127,3 +127,17 @@ function initDockNav(list) {
 }
 
 document.querySelectorAll('.sections-list').forEach(initDockNav);
+
+function replayIntroAnimation() {
+  if (prefersReducedMotion) return;
+
+  const targets = document.querySelectorAll('.intro-anim, .intro-photo');
+  targets.forEach((el) => { el.style.animation = 'none'; });
+  void document.body.offsetHeight; // force reflow so the animation restarts
+  targets.forEach((el) => { el.style.animation = ''; });
+}
+
+const headerName = document.querySelector('.site-header-name');
+if (headerName) {
+  headerName.addEventListener('click', replayIntroAnimation);
+}
