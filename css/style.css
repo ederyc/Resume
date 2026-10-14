@@ -26,6 +26,7 @@
 
   --motion-fast: 150ms;
   --motion-base: 200ms;
+  --motion-slow: 500ms;
   --ease-standard: ease;
   --ease-out: ease-out;
 
@@ -70,6 +71,54 @@ ul { margin: 0; padding: 0; list-style: none; }
 :focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 2px;
+}
+
+/* ---------- Hover frame (shared link hover effect) ---------- */
+/* Add to a link, or to a tightly-wrapping inner span inside a link, to get
+   a top line sweeping in from the left and a bottom line sweeping in from
+   the right on hover/focus, each with a reversed gradient direction. */
+
+.hover-frame {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-frame::before,
+.hover-frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+  transform: scaleX(0);
+  transition: transform var(--motion-base) var(--ease-standard);
+}
+
+.hover-frame::before {
+  top: -6px;
+  background: linear-gradient(to right, var(--gold), var(--plum));
+  transform-origin: left;
+}
+
+.hover-frame::after {
+  bottom: -6px;
+  background: linear-gradient(to right, var(--plum), var(--gold));
+  transform-origin: right;
+}
+
+.hover-frame:hover::before,
+.hover-frame:focus-visible::before,
+a:hover .hover-frame::before,
+a:focus-visible .hover-frame::before {
+  transform: scaleX(1);
+}
+
+.hover-frame:hover::after,
+.hover-frame:focus-visible::after,
+a:hover .hover-frame::after,
+a:focus-visible .hover-frame::after {
+  transform: scaleX(1);
 }
 
 .skip-link {
@@ -134,13 +183,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--ink);
 }
 
-.site-header-link span {
-  border-bottom: 2px solid var(--green);
-  padding-bottom: 2px;
-}
-
 .site-header-link:hover { color: var(--gold); }
-.site-header-link:hover span { border-color: var(--gold); }
 
 /* ---------- Intro ---------- */
 
@@ -490,8 +533,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--ink);
   text-decoration: none;
   font-weight: 600;
-  border-bottom: 2px solid var(--gold);
-  padding-bottom: 3px;
 }
 
 .steam-link:hover { color: var(--gold); }
@@ -541,13 +582,63 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 600;
 }
 
-.footer-links a span {
-  border-bottom: 2px solid var(--green);
-  padding-bottom: 2px;
+.footer-links a:hover { color: var(--gold); }
+
+/* ---------- Social icons ---------- */
+
+.social-icons {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
 }
 
-.footer-links a:hover { color: var(--gold); }
-.footer-links a:hover span { border-color: var(--gold); }
+.social-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #fff;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.social-icon svg {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  fill: #171717;
+  transition: transform var(--motion-slow) var(--ease-standard), fill var(--motion-slow) var(--ease-standard);
+  z-index: 3;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: top var(--motion-slow) var(--ease-standard);
+  z-index: 2;
+}
+
+.social-icon:hover::before,
+.social-icon:focus-visible::before {
+  top: 0;
+}
+
+.social-icon:hover svg,
+.social-icon:focus-visible svg {
+  fill: #fff;
+  transform: rotateY(360deg);
+}
+
+.social-icon-github::before { background: #181717; }
+.social-icon-linkedin::before { background: #0a66c2; }
 
 .footer-fine {
   margin-top: 44px;
@@ -720,11 +811,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .ds-source a {
   color: var(--ink-soft);
-  border-bottom: 1px solid var(--line-strong);
   text-decoration: none;
 }
 
-.ds-source a:hover { color: var(--gold); border-color: var(--gold); }
+.ds-source a:hover { color: var(--gold); }
 
 /* ---------- Project detail page ---------- */
 
@@ -738,11 +828,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   left: 0;
   width: 100%;
   z-index: 0;
-  white-space: nowrap;
   overflow: hidden;
   pointer-events: none;
   user-select: none;
   opacity: 1;
+}
+
+.project-title-track {
+  display: block;
+  width: max-content;
+  white-space: nowrap;
 }
 
 .project-title-bg span {
@@ -762,10 +857,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 600;
   text-decoration: none;
   color: var(--ink-soft);
-  border-bottom: 2px solid var(--line-strong);
 }
 
-.back-link:hover { color: var(--gold); border-color: var(--gold); }
+.back-link:hover { color: var(--gold); }
 
 .project-detail {
   position: relative;
@@ -835,11 +929,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 .project-detail-gallery {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: var(--space-6);
   padding-top: calc(var(--space-3) + var(--space-6));
 }
 
 .project-detail-image {
+  width: 92%;
   aspect-ratio: 4 / 3;
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius-sm);
@@ -891,7 +987,8 @@ ul { margin: 0; padding: 0; list-style: none; }
     padding: 0 var(--pad-x) var(--space-8);
   }
   .project-detail-sticky { position: static; padding-right: 0; }
-  .project-detail-gallery { padding-top: 0; }
+  .project-detail-gallery { align-items: stretch; padding-top: 0; }
+  .project-detail-image { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
