@@ -639,6 +639,8 @@ a:focus-visible .hover-frame::after {
 
 .social-icon-github::before { background: #181717; }
 .social-icon-linkedin::before { background: #0a66c2; }
+.social-icon-steam::before { background: #1b2838; }
+.social-icon-email::before { background: var(--gold); }
 
 .footer-fine {
   margin-top: 44px;
@@ -963,6 +965,81 @@ a:focus-visible .hover-frame::after {
   text-transform: uppercase;
   color: var(--ink-faint);
   padding: 0 var(--space-4);
+}
+
+/* ---------- Project process ---------- */
+
+.project-process {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--pad-x);
+  border-top: 1px solid var(--line);
+}
+
+.process-block {
+  max-width: var(--measure);
+  margin-top: var(--space-8);
+}
+
+.process-block:first-child { margin-top: 0; }
+
+.process-block h2 {
+  font-size: clamp(22px, 2.6vw, 30px);
+  margin-bottom: var(--space-4);
+}
+
+.process-block h3 {
+  font-size: 17px;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+.process-block > p,
+.process-block h3 + p {
+  margin-top: var(--space-3);
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+.process-block > p:first-of-type {
+  margin-top: 0;
+}
+
+.process-block > p.process-change {
+  margin-top: var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--gold);
+}
+
+.process-change strong {
+  color: var(--ink);
+}
+
+.process-team {
+  margin-top: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-4) var(--space-5);
+  max-width: none;
+}
+
+.process-team-member strong {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.process-team-member span {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 /* ---------- Responsive ---------- */

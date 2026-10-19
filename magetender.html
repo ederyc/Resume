@@ -24,6 +24,12 @@
     <symbol id="icon-linkedin" viewBox="0 0 24 24">
       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
     </symbol>
+    <symbol id="icon-steam" viewBox="0 0 24 24">
+      <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.03 4.524 4.524a4.525 4.525 0 0 1-4.524 4.524h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 12-5.373 12-12s-5.373-12-12-12M7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012M18.41 8.91c0-1.665-1.353-3.019-3.019-3.019-1.665 0-3.019 1.353-3.019 3.018 0 1.666 1.354 3.019 3.019 3.019 1.665 0 3.019-1.353 3.019-3.019m-5.32-.005c0-1.272 1.023-2.295 2.295-2.295 1.272 0 2.296 1.023 2.296 2.295 0 1.271-1.024 2.295-2.296 2.295-1.272 0-2.295-1.024-2.295-2.295"/>
+    </symbol>
+    <symbol id="icon-email" viewBox="0 0 24 24">
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -86,6 +92,52 @@
     </div>
   </article>
 
+  <section class="project-process">
+    <div class="process-block">
+      <h2>Team &amp; timeline</h2>
+      <p>Magetender was a six month project built by an interdisciplinary team, Team T.A.A.A.Z.E.D, plus a handful of outside artists and writers who helped with art and dialogue.</p>
+      <ul class="process-team">
+        <li class="process-team-member"><strong>Ala&rsquo;addin Ghosheh</strong><span>Engine Lead</span></li>
+        <li class="process-team-member"><strong>David Guerrero-Pantoja</strong><span>Production Lead</span></li>
+        <li class="process-team-member"><strong>Eder Yepez</strong><span>Tools Lead, combat &amp; music</span></li>
+        <li class="process-team-member"><strong>Zosia Trela</strong><span>Marketing Lead</span></li>
+        <li class="process-team-member"><strong>Tyvin Tandy</strong><span>Audio Design</span></li>
+      </ul>
+      <p>We ran it in three stretches. January through March was ideation and design: prototyping, a proof of concept level with three monsters, and the first rounds of playtesting. April through June was the initial launch push: building out a tutorial and five levels, launching the Steam page, and starting social media. July through September went to polish and the features we&rsquo;d put off to make that launch.</p>
+    </div>
+
+    <div class="process-block">
+      <h2>How the core loop works</h2>
+      <p>Every customer walks in with a starting mood and a mood they want to leave with, plotted across four axes: calm, elevated, grounded, and dissociative. You talk to them, pick a glass size, choose a base liquid, then layer in solid ingredients, each choice nudges the drink&rsquo;s effect somewhere on that same graph. Serve it close enough to what they wanted and they&rsquo;re happy. Miss badly enough and they come over the bar at you, which is where the fight mechanic I built takes over: a quick-time event where you&rsquo;re reading and pressing attack and defense prompts to come out on top.</p>
+      <p>This is the system from our first vertical slice. The finished game kept this core loop but moved on to its own cast, art, and content from here.</p>
+    </div>
+
+    <div class="process-block">
+      <h2>What playtesting actually told us</h2>
+      <p>We ran an in-person playtest with four players after our first real UI pass, then sat down as a team afterward to figure out what to do about it. A few of the findings landed on my side of the game specifically, the rest reshaped the UI as a whole.</p>
+
+      <h3>The mood graph&rsquo;s &ldquo;X&rdquo; didn&rsquo;t read</h3>
+      <p>&ldquo;X marks the spot,&rdquo; one player said when we asked what the marker meant. Another thought the X and the drink&rsquo;s target were the same thing: &ldquo;they mean the same thing.&rdquo; Two different playtesters reading one marker as pointing at two different things told us this was a graph problem, not a tutorial problem.</p>
+      <p class="process-change"><strong>What changed:</strong> we dropped the X for small renders of the actual character heads at their current position, so position and identity read in one glance instead of needing a legend.</p>
+
+      <h3>Nobody saw the timer</h3>
+      <p>&ldquo;Didn&rsquo;t see timer the first time,&rdquo; one tester wrote, and that wasn&rsquo;t unique to them, the tutorial never mentioned the timer existed at all, so nobody had a reason to look for it until they&rsquo;d already lost time to it. One tester assumed it only applied to the pour step and ran out of time on the drink as a whole.</p>
+      <p class="process-change"><strong>What changed:</strong> we made the timer bigger, moved it to the top right, added a line about it to the tutorial, and talked about adding a cue for when it&rsquo;s running low.</p>
+
+      <h3>Controls that made sense to us didn&rsquo;t make sense cold</h3>
+      <p>Several players didn&rsquo;t know Space swapped between heal and attack. One said &ldquo;W makes me think of west instead of up for some reason,&rdquo; and more than one wanted to rebind keys without backing all the way out to the main menu.</p>
+      <p class="process-change"><strong>What changed:</strong> keybind remapping moved into the pause menu, and the swap prompt got more visible and stayed on screen longer during a fight.</p>
+
+      <h3>Combat balance, the part that was mine</h3>
+      <p>Early fights tested too easy, &ldquo;didn&rsquo;t need to heal much,&rdquo; but a specific late fight dragged because the enemy AI could spam healing, and one tester noted that falling behind early in a fight made a comeback feel out of reach. That&rsquo;s a pacing and balance problem in the combat manager, which is what I actually owned, so this feedback went straight into the next pass I made on it. A couple of testers also suggested borrowing timing based inputs, the kind Papa&rsquo;s Pizzeria uses for its mixing step, for brewing under pressure, an idea we were still weighing rather than something we&rsquo;d committed to.</p>
+    </div>
+
+    <div class="process-block">
+      <h2>What it told us going forward</h2>
+      <p>Almost everything that round of feedback touched was UI and UX, not content or scope. That was useful to hear plainly: the next sprint&rsquo;s job was tightening the visual language around mood and time pressure before we added anything new on top of it.</p>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer" id="contact">
@@ -94,11 +146,14 @@
   <p class="footer-text">I'm looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
   <ul class="footer-links">
     <li><a href="assets/resume.pdf"><span class="hover-frame">Resume</span></a></li>
-    <li><a href="mailto:ederyepe777@gmail.com"><span class="hover-frame">ederyepe777@gmail.com</span></a></li>
-    <li><a href="https://store.steampowered.com/app/4709570/MageTender/"><span class="hover-frame">Steam</span></a></li>
   </ul>
 
   <ul class="social-icons">
+    <li>
+      <a class="social-icon social-icon-email" href="mailto:ederyepe777@gmail.com" aria-label="Email">
+        <svg aria-hidden="true"><use href="#icon-email"></use></svg>
+      </a>
+    </li>
     <li>
       <a class="social-icon social-icon-github" href="https://github.com/ederyc" aria-label="GitHub">
         <svg aria-hidden="true"><use href="#icon-github"></use></svg>
@@ -107,6 +162,11 @@
     <li>
       <a class="social-icon social-icon-linkedin" href="https://linkedin.com/in/eder-yepez-cuevas-260156210" aria-label="LinkedIn">
         <svg aria-hidden="true"><use href="#icon-linkedin"></use></svg>
+      </a>
+    </li>
+    <li>
+      <a class="social-icon social-icon-steam" href="https://store.steampowered.com/app/4709570/MageTender/" aria-label="Steam">
+        <svg aria-hidden="true"><use href="#icon-steam"></use></svg>
       </a>
     </li>
   </ul>
