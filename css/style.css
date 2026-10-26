@@ -217,17 +217,34 @@ a:focus-visible .hover-frame::after {
 
 .intro-photo-wrap {
   display: inline-flex;
+  position: relative;
+}
+
+.intro-photo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border-radius: calc(var(--radius-lg) + 14px);
+  background: radial-gradient(circle, rgba(217, 164, 65, 0.55), rgba(165, 106, 130, 0.28) 60%, transparent 75%);
+  filter: blur(22px);
+  pointer-events: none;
 }
 
 .intro-photo {
+  --photo-offset: clamp(6px, 1.6vw, 10px);
+  position: relative;
   display: block;
   height: clamp(300px, 45vw, 500px);
   width: auto;
   aspect-ratio: 800 / 1202;
   border-radius: var(--radius-lg);
-  border: 3px solid var(--gold);
+  border: 4px solid var(--bg);
   background: var(--bg-raised);
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 6px var(--gold),
+    var(--photo-offset) var(--photo-offset) 0 0 var(--plum),
+    0 22px 50px -14px rgba(217, 164, 65, 0.55);
 }
 
 .intro-bio {
