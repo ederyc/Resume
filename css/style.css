@@ -191,10 +191,128 @@ a:focus-visible .hover-frame::after {
   padding: 0;
 }
 
+/* The scene fills the first screen, short enough that the bio below it starts
+   to show. The poster is the loop's first frame, so the video starts without a jump. */
+.hero {
+  --hero-ink: #2A1C33;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: max(560px, calc(100vh - var(--header-h) - var(--space-6)));
+  min-height: max(560px, calc(100svh - var(--header-h) - var(--space-6)));
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 31% 50%;
+}
+
+/* The scene's foreground sinks into the page, so the hero has no hard bottom edge. */
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: 34%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.72) 62%, var(--bg));
+  pointer-events: none;
+}
+
+.hero-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--pad-x) var(--space-4);
+  text-align: center;
+  color: var(--hero-ink);
+  text-shadow: 0 0 18px rgba(255, 249, 238, 0.8);
+}
+
+.hero-content .intro-greeting { color: var(--hero-ink); }
+
+.hero-role {
+  width: fit-content;
+  margin: var(--space-3) auto 0;
+  padding: 6px var(--space-3);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 249, 238, 0.88);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(17px, 1.8vw, 22px);
+  color: var(--hero-ink);
+  text-shadow: none;
+  text-wrap: balance;
+}
+
+.hero-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--pad-x) var(--space-3);
+}
+
+.hero-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--bg-raised);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--ease-standard);
+}
+
+.hero-toggle[hidden] { display: none; }
+.hero-toggle:hover { border-color: var(--gold); }
+
+.hero-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero-icon-play { fill: currentColor; stroke-width: 1.8; }
+.hero-toggle[data-playing="false"] .hero-icon-pause,
+.hero-toggle[data-playing="true"] .hero-icon-play { display: none; }
+
+.hero-credit {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .intro-hero {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--space-8) var(--pad-x) var(--space-7);
+  padding: var(--space-4) var(--pad-x) var(--space-7);
   text-align: center;
 }
 
@@ -211,7 +329,7 @@ a:focus-visible .hover-frame::after {
 .intro-photo-wrap { justify-self: center; }
 
 .intro-greeting {
-  font-size: clamp(70px, 12.5vw, 130px);
+  font-size: clamp(44px, 5.3vw, 96px);
   line-height: 1.1;
 }
 
@@ -234,7 +352,7 @@ a:focus-visible .hover-frame::after {
   --photo-offset: clamp(6px, 1.6vw, 10px);
   position: relative;
   display: block;
-  height: clamp(300px, 45vw, 500px);
+  height: clamp(150px, 34svh, 340px);
   width: auto;
   aspect-ratio: 800 / 1202;
   border-radius: var(--radius-lg);
@@ -248,7 +366,7 @@ a:focus-visible .hover-frame::after {
 }
 
 .intro-bio {
-  margin: var(--space-6) auto 0;
+  margin: 0 auto;
   max-width: var(--measure);
   text-align: left;
   font-size: 17px;
@@ -271,7 +389,7 @@ a:focus-visible .hover-frame::after {
   }
 
   .intro-photo {
-    --jump-height: 100px;
+    --jump-height: var(--space-3);
     animation:
       intro-jump 720ms 700ms 1 both,
       intro-hover 3400ms ease-in-out 1420ms infinite alternate;
@@ -1062,15 +1180,6 @@ a:focus-visible .hover-frame::after {
 /* ---------- Responsive ---------- */
 
 @media (max-width: 860px) {
-  .intro-headline {
-    grid-template-columns: 1fr;
-    row-gap: var(--space-4);
-  }
-  .intro-headline > .intro-greeting:first-child,
-  .intro-headline > .intro-greeting:last-child,
-  .intro-photo-wrap {
-    justify-self: center;
-  }
   .project-row { grid-template-columns: 1fr; }
   .project-image { max-width: 320px; margin: 0 auto; }
 
@@ -1083,6 +1192,25 @@ a:focus-visible .hover-frame::after {
   .project-detail-sticky { position: static; padding-right: 0; }
   .project-detail-gallery { align-items: stretch; padding-top: 0; }
   .project-detail-image { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  :root { --header-h: 96px; }
+  .site-header { padding: var(--space-1) var(--pad-x); row-gap: 0; }
+  .site-header-nav { gap: var(--space-2); width: 100%; justify-content: space-between; }
+  .site-header-name { display: inline-flex; align-items: center; min-height: 24px; }
+  .site-header-link { font-size: 14px; }
+  .hero-content { padding-top: var(--space-3); }
+  .intro-headline {
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: var(--space-1) var(--space-2);
+  }
+  .intro-greeting { grid-row: 1; font-size: clamp(40px, 12.5vw, 60px); }
+  .intro-photo-wrap { grid-row: 2; grid-column: 1 / -1; }
+  .intro-photo { height: clamp(130px, 25svh, 210px); }
+  .hero-role { font-size: 17px; }
+  .hero-credit { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

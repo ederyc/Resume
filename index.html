@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
+<link rel="preload" as="image" href="assets/hero/lilac-falls.webp" type="image/webp" fetchpriority="high">
 </head>
 <body>
 
@@ -69,7 +70,10 @@
 <header class="site-header">
   <a class="site-header-name" href="#top">Eder Yepez Cuevas</a>
   <nav class="site-header-nav" aria-label="Primary">
-    <a class="site-header-link" href="#top"><span class="hover-frame">About</span></a>
+    <a class="site-header-link" href="#about"><span class="hover-frame">About</span></a>
+    <a class="site-header-link" href="#game-design"><span class="hover-frame">Game Design</span></a>
+    <a class="site-header-link" href="#music-design"><span class="hover-frame">Sound</span></a>
+    <a class="site-header-link" href="#ux-ui"><span class="hover-frame">UX/UI</span></a>
     <a class="site-header-link" href="assets/resume.pdf"><span class="hover-frame">Resume</span></a>
   </nav>
 </header>
@@ -77,15 +81,31 @@
 <main id="main-content" tabindex="-1">
 
   <section class="intro" id="top">
-    <div class="intro-hero">
-      <h1 class="intro-headline">
-        <span class="intro-greeting intro-anim" style="animation-delay: 0ms;">Hey!</span>
-        <span class="intro-photo-wrap intro-anim" style="animation-delay: 100ms;">
-          <img class="intro-photo" src="assets/images/profile.jpg" alt="Portrait of Eder Yepez Cuevas" width="800" height="1202">
-        </span>
-        <span class="intro-greeting intro-anim" style="animation-delay: 200ms;">I&rsquo;m Eder</span>
-      </h1>
+    <div class="hero" data-hero data-webm="assets/hero/lilac-falls.webm" data-mp4="assets/hero/lilac-falls.mp4">
+      <video class="hero-scene" poster="assets/hero/lilac-falls.webp" width="1600" height="900" muted loop playsinline preload="none" aria-hidden="true"></video>
 
+      <div class="hero-content">
+        <h1 class="intro-headline">
+          <span class="intro-greeting intro-anim" style="animation-delay: 0ms;">Hey!</span>
+          <span class="intro-photo-wrap intro-anim" style="animation-delay: 100ms;">
+            <img class="intro-photo" src="assets/images/profile-500.webp" alt="Portrait of Eder Yepez Cuevas" width="500" height="751">
+          </span>
+          <span class="intro-greeting intro-anim" style="animation-delay: 200ms;">I&rsquo;m Eder</span>
+        </h1>
+        <p class="hero-role intro-anim" style="animation-delay: 300ms;">Game developer and designer in Lodi, California</p>
+      </div>
+
+      <div class="hero-foot">
+        <button class="hero-toggle" type="button" data-playing="false" hidden>
+          <svg class="hero-icon hero-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5v13M15.5 5.5v13"/></svg>
+          <svg class="hero-icon hero-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5l11 6.5-11 6.5z"/></svg>
+          <span class="visually-hidden">Play background animation</span>
+        </button>
+        <p class="hero-credit">Scene: Lilac Falls, from my project Elaborate Backgrounds</p>
+      </div>
+    </div>
+
+    <div class="intro-hero" id="about">
       <p class="intro-bio intro-anim" style="animation-delay: 320ms;">I'm Eder, a game developer and designer based in Lodi, California, with a background in full-stack engineering, UX design, and game systems. I start every project by asking who's going to use it and what they actually need, then work backward from there, through wireframes, prototypes, and repeated rounds of testing.</p>
 
       <hr class="divider intro-anim" style="animation-delay: 380ms;">

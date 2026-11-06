@@ -141,3 +141,77 @@ const headerName = document.querySelector('.site-header-name');
 if (headerName) {
   headerName.addEventListener('click', replayIntroAnimation);
 }
+
+// The hero's scene. The poster is already on screen, so the video waits for the photo's
+// jump to land, then for an idle moment. It never loads for reduced motion or data saver
+// unless someone asks for it.
+function initHeroScene(hero) {
+  const video = hero.querySelector('video');
+  const toggle = hero.querySelector('.hero-toggle');
+  const label = toggle.querySelector('.visually-hidden');
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+
+  let wanted = !prefersReducedMotion && !saveData;
+  let onScreen = true;
+  let loaded = false;
+  let ready = false;
+
+  function load() {
+    if (loaded) return;
+    loaded = true;
+    const webm = document.createElement('source');
+    webm.src = hero.dataset.webm;
+    webm.type = 'video/webm; codecs="av01.0.08M.08"';
+    const mp4 = document.createElement('source');
+    mp4.src = hero.dataset.mp4;
+    mp4.type = 'video/mp4';
+    // If neither file can play, the poster stays and there's nothing to control.
+    mp4.addEventListener('error', () => { toggle.hidden = true; });
+    video.append(webm, mp4);
+    video.load();
+  }
+
+  function sync() {
+    toggle.dataset.playing = String(wanted);
+    label.textContent = wanted ? 'Pause background animation' : 'Play background animation';
+    if (wanted && ready && onScreen && !document.hidden) {
+      load();
+      video.play().catch((err) => {
+        // Autoplay refused, as in iOS Low Power Mode. Leave the choice to the button.
+        if (err.name === 'NotAllowedError') {
+          wanted = false;
+          sync();
+        }
+      });
+    } else {
+      video.pause();
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    wanted = !wanted;
+    ready = true;
+    sync();
+  });
+  document.addEventListener('visibilitychange', sync);
+  new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    sync();
+  }).observe(hero);
+
+  // The button shows straight away, so nothing beside it shifts when the video starts.
+  toggle.hidden = false;
+  sync();
+
+  const begin = () => {
+    ready = true;
+    sync();
+  };
+  const whenIdle = window.requestIdleCallback || ((run) => setTimeout(run, 200));
+  const afterJump = () => setTimeout(() => whenIdle(begin, { timeout: 1000 }), 1500);
+  if (document.readyState === 'complete') afterJump();
+  else window.addEventListener('load', afterJump, { once: true });
+}
+
+const hero = document.querySelector('[data-hero]');
+if (hero) initHeroScene(hero);
