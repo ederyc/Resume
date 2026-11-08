@@ -672,6 +672,21 @@ a:focus-visible .hover-frame::after {
 
 .steam-link:hover { color: var(--gold); }
 
+.project-links {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.project-link {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.project-link:hover { color: var(--gold); }
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -1093,6 +1108,10 @@ a:focus-visible .hover-frame::after {
   display: block;
 }
 
+/* Dense UI screenshots show whole, without the 4:3 crop. */
+.project-detail-image--full { aspect-ratio: auto; }
+.project-detail-image--full img { height: auto; }
+
 .project-detail-image span {
   font-family: var(--mono);
   font-size: 12px;
@@ -1151,6 +1170,38 @@ a:focus-visible .hover-frame::after {
 
 .process-change strong {
   color: var(--ink);
+}
+
+.process-list {
+  margin-top: var(--space-3);
+  padding-left: var(--space-4);
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+ul.process-list { list-style: disc; }
+ol.process-list { list-style: decimal; }
+
+.process-list li + li { margin-top: var(--space-1); }
+
+.process-figure {
+  margin: var(--space-4) 0 0;
+}
+
+.process-figure--small { max-width: 420px; }
+
+.process-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.process-figure figcaption {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  color: var(--ink-faint);
 }
 
 .process-team {
