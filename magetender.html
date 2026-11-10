@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="cs-page">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Magetender — Eder Yepez Cuevas</title>
 <meta name="description" content="Magetender: a 2D fantasy bar-management and combat game by Eder Yepez Cuevas.">
+<script>document.documentElement.classList.add('js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="assets/images/magetender/hero.webp">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/case-study.css">
 </head>
 <body>
 
@@ -24,156 +27,257 @@
     <symbol id="icon-linkedin" viewBox="0 0 24 24">
       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
     </symbol>
-    <symbol id="icon-steam" viewBox="0 0 24 24">
-      <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.03 4.524 4.524a4.525 4.525 0 0 1-4.524 4.524h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 12-5.373 12-12s-5.373-12-12-12M7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012M18.41 8.91c0-1.665-1.353-3.019-3.019-3.019-1.665 0-3.019 1.353-3.019 3.018 0 1.666 1.354 3.019 3.019 3.019 1.665 0 3.019-1.353 3.019-3.019m-5.32-.005c0-1.272 1.023-2.295 2.295-2.295 1.272 0 2.296 1.023 2.296 2.295 0 1.271-1.024 2.295-2.296 2.295-1.272 0-2.295-1.024-2.295-2.295"/>
-    </symbol>
     <symbol id="icon-email" viewBox="0 0 24 24">
       <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 18 16">
+      <path d="M10.5 1.5 17 8l-6.5 6.5M16.5 8H1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 16 18">
+      <path d="M1.5 10.5 8 17l6.5-6.5M8 16.5V1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
 
-<header class="site-header">
-  <a class="site-header-name" href="index.html#top">Eder Yepez Cuevas</a>
-  <nav class="site-header-nav" aria-label="Primary">
-    <a class="site-header-link" href="index.html#about"><span class="hover-frame">About</span></a>
-    <a class="site-header-link" href="index.html#game-design"><span class="hover-frame">Game Design</span></a>
-    <a class="site-header-link" href="index.html#music-design"><span class="hover-frame">Sound</span></a>
-    <a class="site-header-link" href="index.html#ux-ui"><span class="hover-frame">UX/UI</span></a>
-    <a class="site-header-link" href="assets/resume.pdf"><span class="hover-frame">Resume</span></a>
+<header class="rail">
+  <a class="rail-logo" href="index.html" aria-label="Eder Yepez Cuevas, home">E</a>
+  <nav class="rail-nav" aria-label="Primary">
+    <a class="rail-link" href="index.html#about">About</a>
+    <a class="rail-link" href="assets/resume.pdf">Resume</a>
   </nav>
+  <div class="rail-social">
+    <a class="rail-icon" href="https://linkedin.com/in/eder-yepez-cuevas-260156210" aria-label="LinkedIn">
+      <svg aria-hidden="true"><use href="#icon-linkedin"></use></svg>
+    </a>
+    <a class="rail-icon" href="mailto:ederyepe777@gmail.com" aria-label="Email">
+      <svg aria-hidden="true"><use href="#icon-email"></use></svg>
+    </a>
+  </div>
 </header>
 
 <main id="main-content" tabindex="-1">
 
-  <div class="project-hero-spacer"></div>
-
-  <div class="project-title-bg" aria-hidden="true" data-title="Magetender">
-    <div class="project-title-track">
-      <span>Magetender</span><span>Magetender</span><span>Magetender</span>
+  <!-- ===== Hero ===== -->
+  <section class="cs-hero" style="--hero-pos: 50% 35%">
+    <figure class="cs-hero-media">
+      <img src="assets/images/magetender/hero.webp" alt="" width="1920" height="1080" fetchpriority="high">
+    </figure>
+    <div class="cs-hero-text">
+      <div class="cs-hero-inner">
+        <p class="cs-hero-mark">
+          Magetender
+          <span class="cs-hero-mark-sep" aria-hidden="true"></span>
+          <span class="cs-hero-mark-sub">Game design, Team TAAAZED</span>
+        </p>
+        <h1 class="cs-hero-title">Mix the right drink, or defend the bar</h1>
+      </div>
     </div>
+    <a class="cs-hero-arrow" href="#overview" aria-label="Skip to the overview">
+      <span class="cs-hero-arrow-icon"><svg aria-hidden="true"><use href="#icon-arrow-down"></use></svg></span>
+    </a>
+  </section>
+
+  <!-- ===== 01 Overview ===== -->
+  <section class="cs-section" id="overview">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">01</span>
+        <h2 class="cs-h2">Overview</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead"><strong>Magetender is a 2D fantasy game about a wizard-school dropout running a bar</strong> — mixing magical drinks to match a customer's mood, then defending the bar with a quick-time spell system when an order goes badly. I built it over six months with an interdisciplinary team, Team TAAAZED, designing the combat manager and Shader Graph-based UI, and owning every accessibility feature end to end: full controller support with a custom virtual-mouse system, colorblind-accessible UI, Spanish and Arabic localization, one-handed and touch-friendly controls, and sound accessibility.</p>
+      </div>
+      <dl class="cs-meta">
+        <div data-reveal="rise">
+          <dt>My Role</dt>
+          <dd>Designer and programmer, combat systems, UI, and accessibility</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Tools</dt>
+          <dd>Unity (URP), C#, Shader Graph</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Timeline</dt>
+          <dd>2025&ndash;present</dd>
+        </div>
+      </dl>
+      <div class="cs-actions">
+        <a class="cs-button cs-button--solid" href="https://store.steampowered.com/app/4709570/MageTender/">Wishlist Magetender on Steam <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-band is-pixel" data-reveal="fade">
+    <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" width="460" height="215" loading="lazy">
   </div>
 
-  <article class="project-detail">
-    <div class="project-detail-sticky">
-      <a class="back-link" href="index.html#game-design"><span class="hover-frame">&larr; Back to Game Design</span></a>
-
-      <h1 class="project-detail-title">Magetender</h1>
-      <p class="project-detail-meta">Unity (URP) / C# / 2025&ndash;present</p>
-
-      <h2 class="project-detail-label">About</h2>
-      <p class="project-detail-copy">Magetender is a 2D fantasy game about a wizard-school dropout running a bar — mixing magical drinks to match a customer's mood, then defending the bar with a quick-time spell system when an order goes badly. I built it over six months with an interdisciplinary team, Team TAAAZED, designing the combat manager and Shader Graph-based UI, and owning every accessibility feature end to end: full controller support with a custom virtual-mouse system, colorblind-accessible UI, Spanish and Arabic localization, one-handed and touch-friendly controls, and sound accessibility.</p>
-
-      <div class="project-detail-fields">
-        <div>
-          <h2 class="project-detail-label">My Role</h2>
-          <p>Designer and programmer, combat systems, UI, and accessibility</p>
-        </div>
-        <div>
-          <h2 class="project-detail-label">Tools</h2>
-          <p>Unity (URP), C#, Shader Graph</p>
-        </div>
-        <div>
-          <h2 class="project-detail-label">Timeline</h2>
-          <p>2025&ndash;present</p>
-        </div>
+  <!-- ===== 02 Team & timeline ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">02</span>
+        <h2 class="cs-h2">Team &amp; timeline</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">Magetender was a six month project built by an interdisciplinary team, Team T.A.A.A.Z.E.D, plus a handful of outside artists and writers who helped with art and dialogue.</p>
       </div>
 
-      <a class="steam-link hover-frame" href="https://store.steampowered.com/app/4709570/MageTender/">Wishlist Magetender on Steam</a>
-    </div>
-
-    <div class="project-detail-gallery">
-      <div class="project-detail-image">
-        <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" loading="lazy">
-      </div>
-      <div class="project-detail-image">
-        <span>Gameplay screenshot coming soon</span>
-      </div>
-      <div class="project-detail-image">
-        <span>Accessibility feature screenshot coming soon</span>
-      </div>
-    </div>
-  </article>
-
-  <section class="project-process">
-    <div class="process-block">
-      <h2>Team &amp; timeline</h2>
-      <p>Magetender was a six month project built by an interdisciplinary team, Team T.A.A.A.Z.E.D, plus a handful of outside artists and writers who helped with art and dialogue.</p>
-      <ul class="process-team">
-        <li class="process-team-member"><strong>Ala&rsquo;addin Ghosheh</strong><span>Engine Lead</span></li>
-        <li class="process-team-member"><strong>David Guerrero-Pantoja</strong><span>Production Lead</span></li>
-        <li class="process-team-member"><strong>Eder Yepez</strong><span>Tools Lead, combat &amp; music</span></li>
-        <li class="process-team-member"><strong>Zosia Trela</strong><span>Marketing Lead</span></li>
-        <li class="process-team-member"><strong>Tyvin Tandy</strong><span>Audio Design</span></li>
+      <ul class="cs-team">
+        <li data-reveal="rise"><strong>Ala&rsquo;addin Ghosheh</strong><span>Engine Lead</span></li>
+        <li data-reveal="rise"><strong>David Guerrero-Pantoja</strong><span>Production Lead</span></li>
+        <li class="is-me" data-reveal="rise"><strong>Eder Yepez</strong><span>Tools Lead, combat &amp; music</span></li>
+        <li data-reveal="rise"><strong>Zosia Trela</strong><span>Marketing Lead</span></li>
+        <li data-reveal="rise"><strong>Tyvin Tandy</strong><span>Audio Design</span></li>
       </ul>
-      <p>We ran it in three stretches. January through March was ideation and design: prototyping, a proof of concept level with three monsters, and the first rounds of playtesting. April through June was the initial launch push: building out a tutorial and five levels, launching the Steam page, and starting social media. July through September went to polish and the features we&rsquo;d put off to make that launch.</p>
+
+      <div class="cs-body" data-reveal="slide">
+        <p>We ran it in three stretches.</p>
+      </div>
+
+      <div class="cs-cols">
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">January &ndash; March</span>
+          <h3>Ideation and design</h3>
+          <p>Prototyping, a proof of concept level with three monsters, and the first rounds of playtesting.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">April &ndash; June</span>
+          <h3>The initial launch push</h3>
+          <p>Building out a tutorial and five levels, launching the Steam page, and starting social media.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">July &ndash; September</span>
+          <h3>Polish and deferred features</h3>
+          <p>Polish, and the features we&rsquo;d put off to make that launch.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="process-block">
-      <h2>How the core loop works</h2>
-      <p>Every customer walks in with a starting mood and a mood they want to leave with, plotted across four axes: calm, elevated, grounded, and dissociative. You talk to them, pick a glass size, choose a base liquid, then layer in solid ingredients, each choice nudges the drink&rsquo;s effect somewhere on that same graph. Serve it close enough to what they wanted and they&rsquo;re happy. Miss badly enough and they come over the bar at you, which is where the fight mechanic I built takes over: a quick-time event where you&rsquo;re reading and pressing attack and defense prompts to come out on top.</p>
-      <p>This is the system from our first vertical slice. The finished game kept this core loop but moved on to its own cast, art, and content from here.</p>
+  <!-- ===== 03 Core loop ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">03</span>
+        <h2 class="cs-h2">How the core loop works</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">Every customer walks in with a starting mood and a mood they want to leave with, plotted across four axes: calm, elevated, grounded, and dissociative.</p>
+        <p>You talk to them, pick a glass size, choose a base liquid, then layer in solid ingredients, each choice nudges the drink&rsquo;s effect somewhere on that same graph. Serve it close enough to what they wanted and they&rsquo;re happy. Miss badly enough and they come over the bar at you, which is where the fight mechanic I built takes over: a quick-time event where you&rsquo;re reading and pressing attack and defense prompts to come out on top.</p>
+        <p>This is the system from our first vertical slice. The finished game kept this core loop but moved on to its own cast, art, and content from here.</p>
+      </div>
+
+      <figure class="cs-figure cs-wide" data-reveal="fade">
+        <img src="assets/images/magetender/customer.webp" alt="A green, one-eyed alien customer holding up an ID card at the bar, with buttons to accept it or call it a fake, and the mood graph in the top right corner" width="1920" height="1080" loading="lazy">
+        <figcaption>Talk to the customer. Screenshots in this section are from the Steam page.</figcaption>
+      </figure>
+
+      <div class="cs-pair cs-wide">
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/magetender/taps.webp" alt="Four barrel taps labeled Holy Water, Blood, Moonshine and Spirits, each with a mood icon, pouring into a glass" width="1920" height="1080" loading="lazy">
+          <figcaption>Choose a base liquid.</figcaption>
+        </figure>
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/magetender/shelves.webp" alt="Shelves of ingredients such as eyeballs, a pomegranate, a mushroom and a purple flame, beside a full mug, with three empty ingredient slots below" width="1920" height="1080" loading="lazy">
+          <figcaption>Layer in ingredients.</figcaption>
+        </figure>
+      </div>
     </div>
+  </section>
 
-    <div class="process-block">
-      <h2>What playtesting actually told us</h2>
-      <p>We ran an in-person playtest with four players after our first real UI pass, then sat down as a team afterward to figure out what to do about it. A few of the findings landed on my side of the game specifically, the rest reshaped the UI as a whole.</p>
-
-      <h3>The mood graph&rsquo;s &ldquo;X&rdquo; didn&rsquo;t read</h3>
-      <p>&ldquo;X marks the spot,&rdquo; one player said when we asked what the marker meant. Another thought the X and the drink&rsquo;s target were the same thing: &ldquo;they mean the same thing.&rdquo; Two different playtesters reading one marker as pointing at two different things told us this was a graph problem, not a tutorial problem.</p>
-      <p class="process-change"><strong>What changed:</strong> we dropped the X for small renders of the actual character heads at their current position, so position and identity read in one glance instead of needing a legend.</p>
-
-      <h3>Nobody saw the timer</h3>
-      <p>&ldquo;Didn&rsquo;t see timer the first time,&rdquo; one tester wrote, and that wasn&rsquo;t unique to them, the tutorial never mentioned the timer existed at all, so nobody had a reason to look for it until they&rsquo;d already lost time to it. One tester assumed it only applied to the pour step and ran out of time on the drink as a whole.</p>
-      <p class="process-change"><strong>What changed:</strong> we made the timer bigger, moved it to the top right, added a line about it to the tutorial, and talked about adding a cue for when it&rsquo;s running low.</p>
-
-      <h3>Controls that made sense to us didn&rsquo;t make sense cold</h3>
-      <p>Several players didn&rsquo;t know Space swapped between heal and attack. One said &ldquo;W makes me think of west instead of up for some reason,&rdquo; and more than one wanted to rebind keys without backing all the way out to the main menu.</p>
-      <p class="process-change"><strong>What changed:</strong> keybind remapping moved into the pause menu, and the swap prompt got more visible and stayed on screen longer during a fight.</p>
-
-      <h3>Combat balance, the part that was mine</h3>
-      <p>Early fights tested too easy, &ldquo;didn&rsquo;t need to heal much,&rdquo; but a specific late fight dragged because the enemy AI could spam healing, and one tester noted that falling behind early in a fight made a comeback feel out of reach. That&rsquo;s a pacing and balance problem in the combat manager, which is what I actually owned, so this feedback went straight into the next pass I made on it. A couple of testers also suggested borrowing timing based inputs, the kind Papa&rsquo;s Pizzeria uses for its mixing step, for brewing under pressure, an idea we were still weighing rather than something we&rsquo;d committed to.</p>
+  <!-- ===== Statement ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-wide" data-reveal="slide">
+        <span class="cs-statement-label">A playtester, asked what the mood marker meant</span>
+        <p class="cs-statement-text">&ldquo;<span class="cs-hl">X marks the spot.</span>&rdquo;</p>
+      </div>
     </div>
+  </section>
 
-    <div class="process-block">
-      <h2>What it told us going forward</h2>
-      <p>Almost everything that round of feedback touched was UI and UX, not content or scope. That was useful to hear plainly: the next sprint&rsquo;s job was tightening the visual language around mood and time pressure before we added anything new on top of it.</p>
+  <!-- ===== 04 Playtesting ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">04</span>
+        <h2 class="cs-h2">What playtesting actually told us</h2>
+      </div>
+      <div class="cs-body">
+        <p class="cs-lead" data-reveal="slide">We ran an in-person playtest with four players after our first real UI pass, then sat down as a team afterward to figure out what to do about it. A few of the findings landed on my side of the game specifically, the rest reshaped the UI as a whole.</p>
+
+        <div data-reveal="slide">
+          <h3>The mood graph&rsquo;s &ldquo;X&rdquo; didn&rsquo;t read</h3>
+          <p>&ldquo;X marks the spot,&rdquo; one player said when we asked what the marker meant. Another thought the X and the drink&rsquo;s target were the same thing: &ldquo;they mean the same thing.&rdquo; Two different playtesters reading one marker as pointing at two different things told us this was a graph problem, not a tutorial problem.</p>
+          <p class="cs-change"><strong>What changed:</strong> we dropped the X for small renders of the actual character heads at their current position, so position and identity read in one glance instead of needing a legend.</p>
+          <figure class="cs-figure cs-figure--inline is-pixel" style="max-width: 300px">
+            <img src="assets/images/magetender/mood-graph.webp" alt="The mood graph: four mood icons on the axes, a red and white target, and a small render of the customer's green head marking their current mood" width="360" height="520" loading="lazy">
+            <figcaption>The mood graph on the Steam page, with the customer&rsquo;s head as the marker.</figcaption>
+          </figure>
+        </div>
+
+        <div data-reveal="slide">
+          <h3>Nobody saw the timer</h3>
+          <p>&ldquo;Didn&rsquo;t see timer the first time,&rdquo; one tester wrote, and that wasn&rsquo;t unique to them, the tutorial never mentioned the timer existed at all, so nobody had a reason to look for it until they&rsquo;d already lost time to it. One tester assumed it only applied to the pour step and ran out of time on the drink as a whole.</p>
+          <p class="cs-change"><strong>What changed:</strong> we made the timer bigger, moved it to the top right, added a line about it to the tutorial, and talked about adding a cue for when it&rsquo;s running low.</p>
+        </div>
+
+        <div data-reveal="slide">
+          <h3>Controls that made sense to us didn&rsquo;t make sense cold</h3>
+          <p>Several players didn&rsquo;t know Space swapped between heal and attack. One said &ldquo;W makes me think of west instead of up for some reason,&rdquo; and more than one wanted to rebind keys without backing all the way out to the main menu.</p>
+          <p class="cs-change"><strong>What changed:</strong> keybind remapping moved into the pause menu, and the swap prompt got more visible and stayed on screen longer during a fight.</p>
+        </div>
+
+        <div data-reveal="slide">
+          <h3>Combat balance, the part that was mine</h3>
+          <p>Early fights tested too easy, &ldquo;didn&rsquo;t need to heal much,&rdquo; but a specific late fight dragged because the enemy AI could spam healing, and one tester noted that falling behind early in a fight made a comeback feel out of reach. That&rsquo;s a pacing and balance problem in the combat manager, which is what I actually owned, so this feedback went straight into the next pass I made on it. A couple of testers also suggested borrowing timing based inputs, the kind Papa&rsquo;s Pizzeria uses for its mixing step, for brewing under pressure, an idea we were still weighing rather than something we&rsquo;d committed to.</p>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <!-- ===== 05 Going forward ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-wide" data-reveal="slide">
+        <span class="cs-statement-label">05 &nbsp;What it told us going forward</span>
+        <p class="cs-statement-text">Almost everything that round of feedback touched was <span class="cs-hl">UI and UX</span>, not content or scope.</p>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">That was useful to hear plainly: the next sprint&rsquo;s job was tightening the visual language around mood and time pressure before we added anything new on top of it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Next project ===== -->
+  <section class="cs-next" aria-label="Next project">
+    <a class="cs-next-card" href="steadyhand.html" data-reveal="fade">
+      <img src="assets/images/steadyhand/night.webp" alt="" width="1440" height="900" loading="lazy">
+      <span>
+        <span class="cs-next-kicker">Next project</span>
+        <span class="cs-next-title">Steadyhand</span>
+        <span class="cs-next-sub">A shift handoff board that stays calm under pressure</span>
+      </span>
+      <span class="cs-next-arrow" aria-hidden="true"><svg><use href="#icon-arrow"></use></svg></span>
+    </a>
   </section>
 
 </main>
 
-<footer class="site-footer" id="contact">
-  <h2 class="section-label">Get in touch</h2>
-  <p class="footer-lede">Say hello.</p>
-  <p class="footer-text">I'm looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
-  <ul class="footer-links">
-    <li><a href="assets/resume.pdf"><span class="hover-frame">Resume</span></a></li>
-  </ul>
-
-  <ul class="social-icons">
-    <li>
-      <a class="social-icon social-icon-email" href="mailto:ederyepe777@gmail.com" aria-label="Email">
-        <svg aria-hidden="true"><use href="#icon-email"></use></svg>
-      </a>
-    </li>
-    <li>
-      <a class="social-icon social-icon-github" href="https://github.com/ederyc" aria-label="GitHub">
-        <svg aria-hidden="true"><use href="#icon-github"></use></svg>
-      </a>
-    </li>
-    <li>
-      <a class="social-icon social-icon-linkedin" href="https://linkedin.com/in/eder-yepez-cuevas-260156210" aria-label="LinkedIn">
-        <svg aria-hidden="true"><use href="#icon-linkedin"></use></svg>
-      </a>
-    </li>
-    <li>
-      <a class="social-icon social-icon-steam" href="https://store.steampowered.com/app/4709570/MageTender/" aria-label="Steam">
-        <svg aria-hidden="true"><use href="#icon-steam"></use></svg>
-      </a>
-    </li>
-  </ul>
-  <p class="footer-fine">Eder Yepez Cuevas — Lodi, CA</p>
+<footer class="cs-footer" id="contact">
+  <div class="cs-footer-inner">
+    <h2 class="cs-chat">Let&rsquo;s chat</h2>
+    <p class="cs-footer-text">I&rsquo;m looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
+    <div class="cs-actions">
+      <a class="cs-button cs-button--solid" href="mailto:ederyepe777@gmail.com">ederyepe777@gmail.com <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      <a class="cs-button" href="https://linkedin.com/in/eder-yepez-cuevas-260156210">LinkedIn</a>
+      <a class="cs-button" href="https://github.com/ederyc">GitHub</a>
+      <a class="cs-button" href="assets/resume.pdf">Resume</a>
+    </div>
+    <div class="cs-footer-fine">
+      <span>Eder Yepez Cuevas — Lodi, CA</span>
+      <a href="#main-content">Back to top &uarr;</a>
+    </div>
+  </div>
 </footer>
 
 <script src="js/project.js"></script>
