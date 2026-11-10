@@ -215,3 +215,92 @@ function initHeroScene(hero) {
 
 const hero = document.querySelector('[data-hero]');
 if (hero) initHeroScene(hero);
+
+// Project slabs: the window tilts and catches light under the cursor, and a slab with a
+// clip plays it only while it's on screen. Reduced motion and data saver keep the poster
+// until someone presses play.
+const canTilt = !prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+function initSlabTilt(slab) {
+  const maxTiltX = 5; // deg, top/bottom
+  const maxTiltY = 7; // deg, left/right
+  let rect = null;
+
+  slab.addEventListener('pointerenter', () => { rect = slab.getBoundingClientRect(); });
+  slab.addEventListener('pointermove', (e) => {
+    if (!rect) rect = slab.getBoundingClientRect();
+    const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+    const y = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+    slab.classList.add('is-tracking');
+    slab.style.setProperty('--ry', `${((x - 0.5) * 2 * maxTiltY).toFixed(2)}deg`);
+    slab.style.setProperty('--rx', `${((0.5 - y) * 2 * maxTiltX).toFixed(2)}deg`);
+    slab.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+    slab.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+  });
+  slab.addEventListener('pointerleave', () => {
+    rect = null;
+    slab.classList.remove('is-tracking'); // the spring transition carries it home
+    ['--rx', '--ry', '--mx', '--my'].forEach((p) => slab.style.removeProperty(p));
+  });
+}
+
+function initSlabVideo(slab) {
+  const video = slab.querySelector('video');
+  const toggle = slab.querySelector('.slab-toggle');
+  if (!video || !toggle) return;
+  const label = toggle.querySelector('.visually-hidden');
+  const name = slab.dataset.name || 'project';
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+
+  let wanted = !prefersReducedMotion && !saveData;
+  let onScreen = false;
+  let loaded = false;
+
+  function load() {
+    if (loaded) return;
+    loaded = true;
+    const webm = document.createElement('source');
+    webm.src = slab.dataset.webm;
+    webm.type = 'video/webm; codecs="av01.0.08M.08"';
+    const mp4 = document.createElement('source');
+    mp4.src = slab.dataset.mp4;
+    mp4.type = 'video/mp4';
+    mp4.addEventListener('error', () => { toggle.hidden = true; });
+    video.append(webm, mp4);
+    video.load();
+  }
+
+  function sync() {
+    toggle.dataset.playing = String(wanted);
+    label.textContent = `${wanted ? 'Pause' : 'Play'} the ${name} preview`;
+    if (wanted && onScreen && !document.hidden) {
+      load();
+      video.play().catch((err) => {
+        if (err.name === 'NotAllowedError') {
+          wanted = false;
+          sync();
+        }
+      });
+    } else {
+      video.pause();
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    wanted = !wanted;
+    sync();
+  });
+  document.addEventListener('visibilitychange', sync);
+  new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    sync();
+  }, { threshold: 0.35 }).observe(slab);
+
+  toggle.hidden = false;
+  sync();
+}
+
+document.querySelectorAll('[data-slab]').forEach((slab) => {
+  if (canTilt) initSlabTilt(slab);
+  initSlabVideo(slab);
+});

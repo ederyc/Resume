@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+https://mchiu.co.uk/<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -149,9 +149,13 @@
 
     <div class="project-list">
       <article class="project-row">
-        <a class="project-image" href="magetender.html" aria-label="View Magetender project page">
-          <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" loading="lazy" width="460" height="215">
-        </a>
+        <!-- Gameplay clip goes here: add data-webm / data-mp4 and swap the img for a <video> like Steadyhand's. -->
+        <div class="slab" data-slab style="--slab-glow: var(--plum)">
+          <a class="slab-screen" href="magetender.html" aria-label="View Magetender project page">
+            <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" loading="lazy" width="460" height="215" style="object-position: 0% 50%">
+            <span class="slab-label" aria-hidden="true">View the project</span>
+          </a>
+        </div>
         <div class="project-copy">
           <h3>Magetender</h3>
           <p class="project-meta">Unity (URP) / C# / 2025&ndash;present</p>
@@ -185,33 +189,61 @@
       </div>
     </div>
 
-    <p class="category-intro">Two self-directed interface concepts, each built around one interaction problem. Both use invented data, and neither has been tested with real users yet.</p>
+    <p class="category-intro">Three self-directed interface projects, each built around one interaction problem. None has been tested with real users yet, and the two boards use invented data.</p>
 
     <div class="project-list">
       <article class="project-row">
-        <a class="project-image" href="steadyhand.html" aria-label="View Steadyhand project page">
-          <img src="assets/images/steadyhand/card.webp" alt="Steadyhand, a patient handoff board in a floating window on a soft teal backdrop" loading="lazy" width="640" height="300">
-        </a>
+        <div class="slab" data-slab style="--slab-glow: var(--gold)">
+          <a class="slab-screen" href="https://ederyc.github.io/Elaborate-Backgrounds/" aria-label="Open the Elaborate Backgrounds live demo">
+            <img src="assets/images/elaborate-backgrounds-card.webp" alt="The Elaborate Backgrounds editor with Lilac Falls open: numbered layers and a depth view on the left, a waterfall selected on the canvas, and its settings on the right" loading="lazy" width="640" height="300">
+            <span class="slab-label" aria-hidden="true">Try the live demo</span>
+          </a>
+        </div>
+        <div class="project-copy">
+          <h3>Elaborate Backgrounds</h3>
+          <p class="project-meta">HTML / CSS / JavaScript / WebGL2 / 2026</p>
+          <p>A browser editor for making your own looping stop-motion wallpapers. It grew out of a study recreating a stop-motion backdrop seen on a podcast set. The interface problem: a scene can have dozens of layers at different depths, so how do you keep track of what sits in front of what? Layers are numbered and color-coded by depth, and a depth view shows the whole stack at a glance. Pieces come from a built-in store or are drawn and cut by hand, and a finished loop exports as a still, a video or a live wallpaper. There are no photos and no image-generation models; every picture is drawn by code.</p>
+          <div class="project-links">
+            <a class="project-link hover-frame" href="https://ederyc.github.io/Elaborate-Backgrounds/">Try the live demo</a>
+            <a class="project-link hover-frame" href="https://github.com/ederyc/Elaborate-Backgrounds">View the code on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-row">
+        <div class="slab" data-slab data-name="Steadyhand" data-webm="assets/slabs/steadyhand.webm" data-mp4="assets/slabs/steadyhand.mp4" style="--slab-glow: var(--green)">
+          <a class="slab-screen" href="steadyhand.html" aria-label="View Steadyhand project page">
+            <video poster="assets/slabs/steadyhand-poster.webp" width="960" height="600" muted loop playsinline preload="none" aria-hidden="true"></video>            <span class="slab-label" aria-hidden="true">View the project</span>
+          </a>
+          <button class="slab-toggle" type="button" data-playing="false" hidden>
+            <svg class="hero-icon hero-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5v13M15.5 5.5v13"/></svg>
+            <svg class="hero-icon hero-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5l11 6.5-11 6.5z"/></svg>
+            <span class="visually-hidden">Play the Steadyhand preview</span>
+          </button>
+        </div>
         <div class="project-copy">
           <h3>Steadyhand</h3>
           <p class="project-meta">HTML / CSS / JavaScript / 2026</p>
           <p>A shift handoff board for a made-up hospital unit, built to work through one UI problem: how do you keep a dense list calm and readable for someone who&rsquo;s busy, tired and under time pressure? It has live filters, a density toggle, a patient detail drawer, full keyboard use and a night mode.</p>
           <div class="project-links">
             <a class="project-link hover-frame" href="steadyhand.html">View the project</a>
+            <a class="project-link hover-frame" href="https://ederyc.github.io/Shift-Handoff-Demo/">Try the live demo</a>
             <a class="project-link hover-frame" href="https://github.com/ederyc/Shift-Handoff-Demo">View the code on GitHub</a>
           </div>
         </div>
       </article>
 
       <article class="project-row">
-        <a class="project-image" href="https://github.com/ederyc/Dispatch-Board" aria-label="View Haul Board code on GitHub">
-          <img src="assets/images/haul-board-card.webp" alt="Haul Board, a day timeline of harvest pickups assigned to drivers, over an aerial view of farmland" loading="lazy" width="640" height="300">
-        </a>
+        <div class="slab" data-slab style="--slab-glow: var(--gold)">
+          <a class="slab-screen" href="https://github.com/ederyc/Dispatch-Board" aria-label="View Haul Board code on GitHub">
+            <img src="assets/images/haul-board-card.webp" alt="Haul Board, a day timeline of harvest pickups assigned to drivers, over an aerial view of farmland" loading="lazy" width="640" height="300">
+            <span class="slab-label" aria-hidden="true">View the code</span>
+          </a>
+        </div>
         <div class="project-copy">
           <h3>Haul Board</h3>
           <p class="project-meta">HTML / CSS / JavaScript / 2026</p>
           <p>A one-day board for assigning harvest pickups to a small pool of drivers and trucks, built as an interaction design exercise. Conflicts show up during the drag, not after a save, and the board offers specific fixes, like swapping two hauls or moving one to the next open slot. Drag-and-drop has a full keyboard alternative that runs the same conflict checks, and conflicts never rely on color alone.</p>
-          <p>Concept and design by Eder Yepez Cuevas. The code was written with help from Claude, Anthropic&rsquo;s AI coding assistant.</p>
           <div class="project-links">
             <a class="project-link hover-frame" href="https://github.com/ederyc/Dispatch-Board">View the code on GitHub</a>
           </div>
