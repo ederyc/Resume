@@ -5,9 +5,13 @@
       the cursor or knock with a click), drops in from the top of the card the first
       time it's seen, and inside it the wizard hat bobs and throws sparkles while the
       potion sloshes, reacting to the swing.
-   2. The key art tilts toward the cursor, and a soft glow follows it across the card.
+   2. The key art is a thick 3D slab that rests at an angle, sways and floats, leans
+      toward the cursor and flips all the way round when clicked. A soft glow follows
+      the cursor across the card.
    3. Ingredients float around the key art as 3D voxel models built from their sprites.
-      Click one and it bursts into its own voxels, then pops back.
+      Click one and it's tossed across the card into the potion on the sign, which
+      splashes and takes on the ingredient's color for a moment; then it pops back.
+      Their canvas covers the whole card, so nothing is cut off before the card's edge.
 
    Everything starts only once the card is on screen and stops when it leaves.
    With reduced motion the sign and items are drawn once, still. */
@@ -22,32 +26,16 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const rand = (a, b) => a + Math.random() * (b - a);
 
-  // ---------- shared helpers ----------
+  // The sign hands the items a way to find the potion and splash it (set once it's live).
+  let signFx = null;
 
-  function loadPixels(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        const c = document.createElement('canvas');
-        c.width = img.naturalWidth;
-        c.height = img.naturalHeight;
-        const ctx = c.getContext('2d', { willReadFrequently: true });
-        ctx.drawImage(img, 0, 0);
-        try {
-          const id = ctx.getImageData(0, 0, c.width, c.height);
-          resolve({ w: c.width, h: c.height, data: id.data, u32: new Uint32Array(id.data.buffer) });
-        } catch (err) {
-          reject(err); // a file:// page can't read pixels back; the static image stays
-        }
-      };
-      img.onerror = reject;
-      img.src = src;
-    });
-  }
+  const { loadPixels, voxelize, M, VS_MESH, FS_MESH, VS_BITS, FS_BITS } = window.Voxel;
 
   // Colors as the Uint32 an ImageData buffer holds on little-endian machines (ABGR).
   const U = (hex) => (0xff000000 | (parseInt(hex.slice(4, 6), 16) << 16) | (parseInt(hex.slice(2, 4), 16) << 8) | parseInt(hex.slice(0, 2), 16)) >>> 0;
   const R = (c) => c & 255, G = (c) => (c >>> 8) & 255, B = (c) => (c >>> 16) & 255, A = (c) => c >>> 24;
+  const rgbOf = (hex) => [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const Urgb = ([r, g, b]) => (0xff000000 | (Math.round(clamp(b, 0, 255)) << 16) | (Math.round(clamp(g, 0, 255)) << 8) | Math.round(clamp(r, 0, 255))) >>> 0;
 
   // Starts and stops a set of loops with the card's visibility.
   const loops = [];
@@ -206,7 +194,19 @@
 
     // ---------- state ----------
     const S = { theta: 0, omega: 0, alpha: 0, drop: 0, dropV: 0, dropped: false,
-      slosh: 0, sloshV: 0, wave: 0, lift: 0, liftT: 99, nextBob: 1.2, excite: 0, sparks: [], bubbles: [], pxTime: 0, t: 0 };
+      slosh: 0, sloshV: 0, wave: 0, lift: 0, liftT: 99, nextBob: 1.2, excite: 0, sparks: [], bubbles: [], drops: [], pxTime: 0, t: 0,
+      tint: null, tintK: 0, tintHold: 0 };
+
+    // The liquid's four shades (surface, body, swirl, shadow). An ingredient dropped in
+    // tints them toward its own color for a couple of seconds, then they fade back.
+    const LIQ_BASE = ['d191f2', 'c182e4', 'a556c7', '7a4093'].map(rgbOf);
+    const LIQ_SHADE = [1.15, 1, 0.8, 0.55];
+    const tintShades = (rgb) => LIQ_SHADE.map((f) => rgb.map((v) => Math.min(255, v * f)));
+    function liquidPalette() {
+      if (!S.tint || S.tintK <= 0) return LIQ_BASE.map(Urgb);
+      const k = S.tintK * S.tintK * (3 - 2 * S.tintK);
+      return LIQ_BASE.map((b, i) => Urgb(b.map((v, j) => v + (S.tint[i][j] - v) * k)));
+    }
     const LIFT = [1, 2, 3, 3, 3, 2, 1, 0, 1, 0]; // native pixels, one step per 1/12 s
 
     function bob() {
@@ -233,16 +233,17 @@
         if (n > liquidVolume) lo = L; else hi = L;
       }
       const L = (lo + hi) / 2;
+      const [cSurf, cBody, cSwirl, cShadow] = liquidPalette();
       for (const p of flask) {
         const s = surf(p.x, L);
         if (p.y < s) { out32[p.i - Ys * W] = p.empty; continue; }
         const depth = p.y - Math.ceil(s);
-        let c = U('c182e4');
-        if (depth <= 0) c = U('d191f2');
+        let c = cBody;
+        if (depth <= 0) c = cSurf;
         else if (depth >= 2) {
           const swirl = Math.sin(p.x * 0.38 + p.y * 0.52 + S.t * 1.6) + Math.sin(p.x * 0.19 - p.y * 0.71 - S.t * 1.1) + 0.6 * Math.sin((p.x + p.y) * 0.9 + S.t * 2.4);
-          if (swirl > 1.5) c = U('a556c7');
-          if (!inFlask.has(p.i + 1) || !inFlask.has(p.i + W)) c = p.x > fcx && !inFlask.has(p.i + W) ? U('7a4093') : U('a556c7');
+          if (swirl > 1.5) c = cSwirl;
+          if (!inFlask.has(p.i + 1) || !inFlask.has(p.i + W)) c = p.x > fcx && !inFlask.has(p.i + W) ? cShadow : cSwirl;
         }
         out32[p.i - Ys * W] = c;
       }
@@ -250,7 +251,17 @@
       S.bubbles = S.bubbles.filter((b) => {
         b.y -= 1;
         if (b.y < surf(b.x, L) + 1) return false;
-        if (inFlask.has(b.y * W + b.x)) put(b.x, b.y, U('d191f2'));
+        if (inFlask.has(b.y * W + b.x)) put(b.x, b.y, cSurf);
+        return true;
+      });
+
+      // splash droplets thrown out of the neck, falling back past the flask
+      S.drops = S.drops.filter((d) => {
+        d.vy += 0.5; d.x += d.vx; d.y += d.vy; d.age++;
+        const x = Math.round(d.x), y = Math.round(d.y);
+        if (y >= H || d.age > 26 || (d.vy > 0 && inFlask.has(y * W + x))) return false;
+        put(x, y, d.c);
+        if (d.big) { put(x + 1, y, d.c); put(x, y + 1, d.c); put(x + 1, y + 1, d.c); }
         return true;
       });
 
@@ -351,43 +362,116 @@
         if (S.nextBob <= 0) { bob(); S.nextBob = S.excite ? rand(0.7, 1.1) : rand(2.2, 3.4); S.excite = 0; }
         S.lift = S.liftT < LIFT.length ? LIFT[S.liftT++] : 0;
         if (Math.random() < 0.22) spark(false);
+        if (S.tintHold > 0) S.tintHold -= 1 / 12;
+        else S.tintK = Math.max(0, S.tintK - 1 / 12 / 2.4);
         drawPixels();
       }
     }));
     drawPixels();
+
+    // ---------- what the ingredients need: where the potion's neck is, and the splash ----------
+    const NECK = [60, 201];
+    signFx = {
+      // the neck in client pixels, following the swing and the drop-in
+      neck() {
+        const r = root.getBoundingClientRect(), sx = r.width / W, sy = r.height / H;
+        const th = S.theta, chainPx = (r.height * Ys) / H, phi = -th * 0.22;
+        const lx = (NECK[0] - W / 2) * sx, ly = (NECK[1] - Ys) * sy;
+        return {
+          x: r.left + r.width / 2 - chainPx * Math.sin(th) + lx * Math.cos(phi) - ly * Math.sin(phi),
+          y: r.top + Ys * sy + S.drop * r.height - chainPx * (1 - Math.cos(th)) + lx * Math.sin(phi) + ly * Math.cos(phi),
+        };
+      },
+      splash(hex) {
+        const shades = tintShades(rgbOf(hex));
+        S.tint = shades;
+        S.tintK = 1;
+        S.tintHold = 2.2;
+        S.sloshV += (Math.random() < 0.5 ? -1 : 1) * rand(1.8, 2.6);
+        S.omega += (Math.random() < 0.5 ? -1 : 1) * rand(0.25, 0.4);
+        const cs = [Urgb(shades[0]), Urgb(shades[1]), U('fff4d6')];
+        for (let i = 0; i < 14; i++) {
+          S.drops.push({ x: NECK[0] + rand(-2, 2), y: NECK[1] - 2, vx: rand(-2, 1.4), vy: rand(-4.6, -2.2), age: 0,
+            big: Math.random() < 0.3, c: cs[i % 3] });
+        }
+        for (let i = 0; i < 6; i++) S.bubbles.push({ x: Math.round(rand(fx0 + 4, fx1 - 4)), y: fyMax - 1 - Math.round(rand(0, 8)) });
+        bob();
+      },
+    };
   }
 
-  // ---------- 2. tilt and glow ----------
+  // ---------- 2. the key art slab, and the glow ----------
 
-  function initTilt() {
+  // Rest pose (degrees): turned toward the copy on the left, tipped back a little.
+  const REST = { rx: 6, ry: -16, rz: -2.5 };
+  const SLICES = 12, SLICE_GAP = 2.5; // the slab's thickness, as stacked rounded layers
+
+  function initArt() {
     const art = card.querySelector('[data-mt-art]');
-    if (!art || reduceMotion || !finePointer) return;
-    let raf = 0, pt = null;
-    const apply = () => {
-      raf = 0;
-      if (!pt) return;
-      const a = art.getBoundingClientRect(), c = card.getBoundingClientRect();
-      const nx = clamp((pt.x - (a.left + a.width / 2)) / (c.width / 2), -1, 1);
-      const ny = clamp((pt.y - (a.top + a.height / 2)) / (c.height / 2), -1, 1);
-      art.style.setProperty('--rx', `${(-ny * 6).toFixed(2)}deg`);
-      art.style.setProperty('--ry', `${(nx * 8).toFixed(2)}deg`);
-      art.style.setProperty('--px', nx.toFixed(3));
-      art.style.setProperty('--py', ny.toFixed(3));
-      card.style.setProperty('--gx', `${(((pt.x - c.left) / c.width) * 100).toFixed(1)}%`);
-      card.style.setProperty('--gy', `${(((pt.y - c.top) / c.height) * 100).toFixed(1)}%`);
-    };
-    card.addEventListener('pointermove', (e) => {
-      pt = { x: e.clientX, y: e.clientY };
-      art.classList.add('is-tracking');
-      if (!raf) raf = requestAnimationFrame(apply);
+    const frame = art && art.querySelector('.mt-frame');
+    if (!frame) return;
+
+    // Thickness: gilded near the face, darkening to wood toward the back.
+    const edge = [rgbOf('f3dfa6'), rgbOf('b98a4c'), rgbOf('5a3a22')];
+    for (let i = 1; i <= SLICES; i++) {
+      const s = document.createElement('i');
+      s.className = 'mt-slice' + (i === SLICES ? ' mt-slice--back' : '');
+      s.setAttribute('aria-hidden', 'true');
+      const k = (i - 1) / (SLICES - 1), lo = k < 0.5 ? 0 : 1, f = k < 0.5 ? k * 2 : (k - 0.5) * 2;
+      s.style.setProperty('--z', `${-i * SLICE_GAP}px`);
+      if (i < SLICES) s.style.background = `rgb(${edge[lo].map((v, j) => Math.round(v + (edge[lo + 1][j] - v) * f)).join(',')})`;
+      frame.prepend(s);
+    }
+    if (reduceMotion) return;
+
+    const A = { rx: REST.rx, ry: REST.ry, rz: REST.rz, nx: 0, ny: 0, spin: 0, spinV: 0, spinTo: 0, t: rand(0, 10) };
+    let pt = null;
+    if (finePointer) {
+      card.addEventListener('pointermove', (e) => { pt = { x: e.clientX, y: e.clientY }; });
+      card.addEventListener('pointerleave', () => {
+        pt = null;
+        card.style.removeProperty('--gx');
+        card.style.removeProperty('--gy');
+      });
+    }
+    // Click the art (not an ingredient in front of it) and it flips all the way round.
+    art.addEventListener('pointerdown', (e) => {
+      if (e.mtHandled) return;
+      A.spinTo += 360 * (A.nx > 0.1 ? -1 : 1);
+      A.spinV += 260 * Math.sign(A.spinTo - A.spin || 1);
     });
-    card.addEventListener('pointerleave', () => {
-      pt = null;
-      art.classList.remove('is-tracking');
-      ['--rx', '--ry', '--px', '--py'].forEach((p) => art.style.removeProperty(p));
-      card.style.removeProperty('--gx');
-      card.style.removeProperty('--gy');
-    });
+
+    addLoop(makeLoop((dt) => {
+      A.t += dt;
+      let tx = 0, ty = 0;
+      if (pt) {
+        const a = art.getBoundingClientRect(), c = card.getBoundingClientRect();
+        tx = clamp((pt.x - (a.left + a.width / 2)) / (c.width / 2), -1, 1);
+        ty = clamp((pt.y - (a.top + a.height / 2)) / (c.height / 2), -1, 1);
+        card.style.setProperty('--gx', `${(((pt.x - c.left) / c.width) * 100).toFixed(1)}%`);
+        card.style.setProperty('--gy', `${(((pt.y - c.top) / c.height) * 100).toFixed(1)}%`);
+      }
+      const ease = Math.min(1, dt * 4.5);
+      A.nx += (tx - A.nx) * ease;
+      A.ny += (ty - A.ny) * ease;
+      // slow sway and float on top of the rest pose, leaning toward the cursor
+      const rx = REST.rx + Math.sin(A.t * 0.55) * 2 - A.ny * 8;
+      const ry = REST.ry + Math.sin(A.t * 0.4 + 1.3) * 4 + A.nx * 13;
+      const rz = REST.rz + Math.sin(A.t * 0.5 + 0.4) * 1 + A.nx * 1.5;
+      A.rx += (rx - A.rx) * ease; A.ry += (ry - A.ry) * ease; A.rz += (rz - A.rz) * ease;
+      // the flip: a spring that settles on the next full turn, with a little overshoot
+      A.spinV += ((A.spinTo - A.spin) * 55 - A.spinV * 9.5) * dt;
+      A.spin += A.spinV * dt;
+      const lift = Math.sin(A.t * 0.9) * 7;
+      frame.style.transform = `translateY(${lift.toFixed(2)}px) rotateX(${A.rx.toFixed(2)}deg) rotateY(${(A.ry + A.spin).toFixed(2)}deg) rotateZ(${A.rz.toFixed(2)}deg)`;
+      const turn = ((((A.ry + A.spin) % 360) + 540) % 360) - 180; // -180..180, 0 = facing out
+      art.style.setProperty('--px', A.nx.toFixed(3));
+      art.style.setProperty('--py', A.ny.toFixed(3));
+      // the glare's offset from the face's center, as a share of its own (double) size
+      art.style.setProperty('--glx', `${(-turn * 1.1).toFixed(1)}%`);
+      art.style.setProperty('--gly', `${((-0.2 + A.ny * 0.3 - (A.rx - REST.rx) * 0.03) * 50).toFixed(1)}%`);
+      art.style.setProperty('--lift', (lift / 25).toFixed(3));
+    }));
   }
 
   // ---------- 3. voxel items ----------
@@ -420,145 +504,15 @@
     return out;
   }
 
-  // Extrudes a sprite into voxels. Depth grows with the distance from the outline, so
-  // round things come out round: each pixel becomes a column, terraced like clay.
-  function voxelize(sp, puff) {
-    const { w, h, data } = sp;
-    const a = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : data[(y * w + x) * 4 + 3]);
-    const INF = 1e9, dist = new Float32Array(w * h);
-    for (let i = 0; i < w * h; i++) dist[i] = data[i * 4 + 3] >= 20 ? INF : 0;
-    const D = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : dist[y * w + x]);
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const i = y * w + x;
-      if (!dist[i]) continue;
-      dist[i] = Math.min(dist[i], D(x - 1, y) + 1, D(x, y - 1) + 1, D(x - 1, y - 1) + 1.414, D(x + 1, y - 1) + 1.414);
-    }
-    for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) {
-      const i = y * w + x;
-      if (!dist[i]) continue;
-      dist[i] = Math.min(dist[i], D(x + 1, y) + 1, D(x, y + 1) + 1, D(x + 1, y + 1) + 1.414, D(x - 1, y + 1) + 1.414);
-    }
-    let Rmax = 1;
-    for (let i = 0; i < w * h; i++) if (dist[i] < INF) Rmax = Math.max(Rmax, dist[i]);
-    const hd = new Float32Array(w * h);
-    for (let i = 0; i < w * h; i++) {
-      if (!dist[i]) continue;
-      const e = Math.min(dist[i], Rmax);
-      hd[i] = Math.max(0.5, Math.round(puff * Math.sqrt(Math.max(0, Rmax * Rmax - (Rmax - e) * (Rmax - e))) * 2) / 2);
-    }
-    const H = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : hd[y * w + x]);
-    const solid = { p: [], n: [], c: [] }, glass = { p: [], n: [], c: [] }, voxels = [];
-    const cx = w / 2, cy = h / 2;
-    const quad = (m, v, n, col) => {
-      for (const k of [0, 1, 2, 0, 2, 3]) { m.p.push(...v[k]); m.n.push(...n); m.c.push(...col); }
-    };
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const i = y * w + x, z = hd[i];
-      if (!z) continue;
-      const col = [data[i * 4], data[i * 4 + 1], data[i * 4 + 2], data[i * 4 + 3]];
-      const m = col[3] < 245 ? glass : solid;
-      const x0 = x - cx, x1 = x0 + 1, yt = cy - y, yb = yt - 1;
-      quad(m, [[x0, yb, z], [x1, yb, z], [x1, yt, z], [x0, yt, z]], [0, 0, 1], col);
-      quad(m, [[x1, yb, -z], [x0, yb, -z], [x0, yt, -z], [x1, yt, -z]], [0, 0, -1], col);
-      const side = (hn, v, n) => {
-        if (hn >= z) return;
-        if (hn === 0) quad(m, v(-z, z), n, col);
-        else { quad(m, v(hn, z), n, col); quad(m, v(-z, -hn), n, col); }
-      };
-      side(H(x + 1, y), (za, zb) => [[x1, yb, za], [x1, yb, zb], [x1, yt, zb], [x1, yt, za]], [1, 0, 0]);
-      side(H(x - 1, y), (za, zb) => [[x0, yt, za], [x0, yt, zb], [x0, yb, zb], [x0, yb, za]], [-1, 0, 0]);
-      side(H(x, y - 1), (za, zb) => [[x1, yt, za], [x1, yt, zb], [x0, yt, zb], [x0, yt, za]], [0, 1, 0]);
-      side(H(x, y + 1), (za, zb) => [[x0, yb, za], [x0, yb, zb], [x1, yb, zb], [x1, yb, za]], [0, -1, 0]);
-      if (col[3] >= 245) voxels.push([x0 + 0.5, yt - 0.5, rand(-z, z) * 0.8, col]);
-    }
-    return { w, h, solid, glass, voxels };
-  }
-
-  // Minimal 4x4 matrices, column-major like WebGL wants.
-  const M = {
-    persp(fovy, aspect, n, f) { const t = 1 / Math.tan(fovy / 2); return [t / aspect, 0, 0, 0, 0, t, 0, 0, 0, 0, (f + n) / (n - f), -1, 0, 0, (2 * f * n) / (n - f), 0]; },
-    mul(a, b) { const o = new Array(16); for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let s = 0; for (let k = 0; k < 4; k++) s += a[k * 4 + r] * b[c * 4 + k]; o[c * 4 + r] = s; } return o; },
-    model(x, y, z, rx, ry, rz, s) {
-      const cx = Math.cos(rx), sx = Math.sin(rx), cy = Math.cos(ry), sy = Math.sin(ry), cz = Math.cos(rz), sz = Math.sin(rz);
-      // R = Ry * Rx * Rz
-      const r00 = cy * cz + sy * sx * sz, r01 = -cy * sz + sy * sx * cz, r02 = sy * cx;
-      const r10 = cx * sz, r11 = cx * cz, r12 = -sx;
-      const r20 = -sy * cz + cy * sx * sz, r21 = sy * sz + cy * sx * cz, r22 = cy * cx;
-      return [r00 * s, r10 * s, r20 * s, 0, r01 * s, r11 * s, r21 * s, 0, r02 * s, r12 * s, r22 * s, 0, x, y, z, 1];
-    },
-    apply(m, v) { return [m[0] * v[0] + m[4] * v[1] + m[8] * v[2] + m[12], m[1] * v[0] + m[5] * v[1] + m[9] * v[2] + m[13], m[2] * v[0] + m[6] * v[1] + m[10] * v[2] + m[14]]; },
-  };
-
-  const LIGHT = `
-    vec3 shade(vec3 n, vec3 c) {
-      vec3 l1 = normalize(vec3(-0.45, 0.65, 0.75)), l2 = normalize(vec3(0.85, -0.25, 0.45));
-      float d1 = max(dot(n, l1), 0.0), d2 = max(dot(n, l2), 0.0);
-      float rim = pow(1.0 - clamp(abs(n.z), 0.0, 1.0), 2.0);
-      return c * (0.44 + 0.66 * d1 * vec3(1.0, 0.95, 0.86) + 0.32 * d2 * vec3(0.78, 0.7, 1.0)) + rim * 0.06 * vec3(1.0, 0.75, 0.45);
-    }`;
-  const VS_MESH = `#version 300 es
-    in vec3 aPos; in vec3 aNrm; in vec4 aCol;
-    uniform mat4 uPV, uModel;
-    out vec3 vN; out vec4 vC;
-    void main() { vN = mat3(uModel) * aNrm; vC = aCol; gl_Position = uPV * uModel * vec4(aPos, 1.0); }`;
-  const FS_MESH = `#version 300 es
-    precision mediump float;
-    in vec3 vN; in vec4 vC; uniform float uAlpha; out vec4 o;
-    ${LIGHT}
-    void main() { o = vec4(shade(normalize(vN), vC.rgb), vC.a * uAlpha); o.rgb *= o.a; }`;
-  const VS_BITS = `#version 300 es
-    in vec3 aPos; in vec3 aNrm; in vec4 iPos; in vec4 iCol; in vec4 iRot;
-    uniform mat4 uPV;
-    out vec3 vN; out vec4 vC;
-    vec3 rot(vec3 v, vec3 k, float a) { return v * cos(a) + cross(k, v) * sin(a) + k * dot(k, v) * (1.0 - cos(a)); }
-    void main() {
-      vN = rot(aNrm, iRot.xyz, iRot.w); vC = iCol;
-      gl_Position = uPV * vec4(iPos.xyz + rot(aPos, iRot.xyz, iRot.w) * iPos.w, 1.0);
-    }`;
-  const FS_BITS = `#version 300 es
-    precision mediump float;
-    in vec3 vN; in vec4 vC; out vec4 o;
-    ${LIGHT}
-    void main() { o = vec4(shade(normalize(vN), vC.rgb), 1.0) * vC.a; }`;
 
   async function initItems(canvas) {
     const gl = canvas.getContext('webgl2', { antialias: true, alpha: true, premultipliedAlpha: true });
     if (!gl) return;
-    const program = (vs, fs) => {
-      const p = gl.createProgram();
-      for (const [type, src] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) {
-        const s = gl.createShader(type);
-        gl.shaderSource(s, src);
-        gl.compileShader(s);
-        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
-        gl.attachShader(p, s);
-      }
-      gl.linkProgram(p);
-      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
-      return p;
-    };
     let meshProg, bitsProg;
-    try { meshProg = program(VS_MESH, FS_MESH); bitsProg = program(VS_BITS, FS_BITS); } catch { return; }
+    try { meshProg = Voxel.program(gl, VS_MESH, FS_MESH); bitsProg = Voxel.program(gl, VS_BITS, FS_BITS); } catch { return; }
     const loc = (p, n) => gl.getAttribLocation(p, n), uni = (p, n) => gl.getUniformLocation(p, n);
 
-    function upload(m) {
-      if (!m.p.length) return null;
-      const vao = gl.createVertexArray();
-      gl.bindVertexArray(vao);
-      const buf = (data, name, size, type, norm) => {
-        const b = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, b);
-        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-        const l = loc(meshProg, name);
-        gl.enableVertexAttribArray(l);
-        gl.vertexAttribPointer(l, size, type, norm, 0, 0);
-      };
-      buf(new Float32Array(m.p), 'aPos', 3, gl.FLOAT, false);
-      buf(new Float32Array(m.n), 'aNrm', 3, gl.FLOAT, false);
-      buf(new Uint8Array(m.c), 'aCol', 4, gl.UNSIGNED_BYTE, true);
-      gl.bindVertexArray(null);
-      return { vao, count: m.p.length / 3 };
-    }
+    const upload = (m) => Voxel.upload(gl, meshProg, m);
 
     // the sprites, cut into separate pieces and extruded
     const specs = [
@@ -571,17 +525,19 @@
       const v = voxelize(sp, specs[k][1]);
       models.push({ ...v, solidGL: upload(v.solid), glassGL: upload(v.glass) });
     }));
-    // mug, salt, horn, eye, eye, eye
+    // mug, salt, horn, eye, eye, eye. Placed relative to the key art (0..1 across and down
+    // it; sa = height as a share of the art's). tint = the color it turns the potion.
     const layout = [
-      { m: 0, u: 0.13, v: 0.22, z: 1.2, size: 0.27 },
-      { m: 1, u: 0.87, v: 0.17, z: 0.6, size: 0.22 },
-      { m: 2, u: 0.91, v: 0.64, z: 1.6, size: 0.2 },
-      { m: 3, u: 0.1, v: 0.74, z: 1.9, size: 0.1 },
-      { m: 4, u: 0.75, v: 0.9, z: 0.9, size: 0.09 },
-      { m: 5, u: 0.47, v: 0.06, z: 0.4, size: 0.085 },
+      { m: 0, au: -0.1, av: 0.13, z: 1.2, sa: 0.35, tint: 'e8a04a' },
+      { m: 1, au: 1.07, av: 0.05, z: 0.6, sa: 0.29, tint: '8fe0d2' },
+      { m: 2, au: 1.08, av: 0.68, z: 1.6, sa: 0.27, tint: 'e2603f' },
+      { m: 3, au: -0.11, av: 0.84, z: 1.9, sa: 0.135, tint: '86d86c' },
+      { m: 4, au: 0.84, av: 1.05, z: 0.9, sa: 0.12, tint: '86d86c' },
+      { m: 5, au: 0.3, av: 1.08, z: 0.4, sa: 0.115, tint: '86d86c' },
     ].filter((it) => models[it.m]);
-    const items = layout.map((it, n) => ({ ...it, ph: rand(0, 6.28), sp: rand(0.55, 0.9), ox: 0, oy: 0, vx: 0, vy: 0,
-      yaw: 0, pitch: 0, state: 'in', scale: reduceMotion ? 1 : 0, scaleV: 0, gone: 0, delay: 0.15 + n * 0.08, spin: 0, spinV: 0 }));
+    const items = layout.map((it, n) => ({ ...it, u: 0.5, v: 0.5, size: 0.1, ph: rand(0, 6.28), sp: rand(0.55, 0.9), ox: 0, oy: 0, vx: 0, vy: 0,
+      yaw: 0, pitch: 0, state: 'in', scale: reduceMotion ? 1 : 0, scaleV: 0, gone: 0, delay: 0.15 + n * 0.08, spin: 0, spinV: 0, tumble: 0 }));
+    const art = card.querySelector('[data-mt-art]');
 
     // particle cube
     const cubeVao = gl.createVertexArray();
@@ -614,47 +570,67 @@
     gl.bindVertexArray(null);
     let bits = [];
 
-    // camera and layout
+    // Camera and layout. The canvas covers the whole card, and the camera's center is
+    // shifted onto the key art so the items are seen head-on there, as if the canvas
+    // were only around the art.
     const FOV = (28 * Math.PI) / 180, CAMZ = 12;
-    let cw = 1, ch = 1, aspect = 1, PV = null;
+    let cw = 1, ch = 1, aspect = 1, PV = null, cxN = 0, cyN = 0;
     const halfH = (z) => Math.tan(FOV / 2) * (CAMZ - z);
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const r = canvas.getBoundingClientRect();
+      const r = canvas.getBoundingClientRect(), a = art.getBoundingClientRect();
       cw = r.width; ch = r.height; aspect = cw / ch;
       canvas.width = Math.max(1, Math.round(cw * dpr));
       canvas.height = Math.max(1, Math.round(ch * dpr));
       gl.viewport(0, 0, canvas.width, canvas.height);
-      PV = M.mul(M.persp(FOV, aspect, 0.1, 40), [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -CAMZ, 1]);
+      const ax = a.left - r.left, ay = a.top - r.top;
+      cxN = ((ax + a.width / 2) / cw) * 2 - 1;
+      cyN = 1 - ((ay + a.height / 2) / ch) * 2;
+      // on a narrow card, pull the items in toward the art so they stay inside it
+      const spread = Math.min(1, (Math.min(ax + a.width / 2, cw - ax - a.width / 2) - 10) / (a.width * 0.72));
+      for (const it of items) {
+        it.u = (ax + (0.5 + (it.au - 0.5) * spread) * a.width) / cw;
+        it.v = (ay + it.av * a.height) / ch;
+        it.size = (it.sa * a.height) / ch;
+      }
+      const P = M.persp(FOV, aspect, 0.1, 40);
+      P[8] = -cxN; P[9] = -cyN;
+      PV = M.mul(P, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -CAMZ, 1]);
     };
     resize();
-    new ResizeObserver(resize).observe(canvas);
+    // resizing clears the canvas; with reduced motion there's no loop to repaint it
+    const ro = new ResizeObserver(() => { resize(); if (reduceMotion) draw(0, 0); });
+    ro.observe(canvas);
+    ro.observe(art);
 
-    const world = (u, v, z) => { const hh = halfH(z); return [(u - 0.5) * 2 * hh * aspect, (0.5 - v) * 2 * hh, z]; };
+    const world = (u, v, z) => { const hh = halfH(z); return [(u * 2 - 1 - cxN) * hh * aspect, (1 - v * 2 - cyN) * hh, z]; };
     const screen = (it) => [(it.u + it.ox) * cw, (it.v + it.oy) * ch];
     const radius = (it) => it.size * ch * 0.55;
 
-    // pointer: push items away, tilt them toward the cursor, pop on click
+    // pointer: push items away, tilt them toward the cursor, toss one on click
     let pointer = null;
-    const host = card;
-    host.addEventListener('pointermove', (e) => {
-      const r = canvas.getBoundingClientRect();
-      pointer = { x: e.clientX - r.left, y: e.clientY - r.top };
-      const over = items.some((it) => it.state === 'idle' && Math.hypot(...screen(it).map((s, k) => s - [pointer.x, pointer.y][k])) < radius(it));
-      canvas.closest('[data-mt-art]').classList.toggle('is-poking', over);
-    });
-    host.addEventListener('pointerleave', () => { pointer = null; });
-    host.addEventListener('pointerdown', (e) => {
-      if (reduceMotion) return;
-      const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    const hitAt = (x, y) => {
       let hit = null, best = Infinity;
       for (const it of items) {
         if (it.state !== 'idle') continue;
         const [sx, sy] = screen(it), d = Math.hypot(sx - x, sy - y);
         if (d < radius(it) && d < best) { best = d; hit = it; }
       }
-      if (hit) pop(hit);
+      return hit;
+    };
+    card.addEventListener('pointermove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      pointer = { x: e.clientX - r.left, y: e.clientY - r.top };
+      card.classList.toggle('is-poking', !!hitAt(pointer.x, pointer.y));
     });
+    card.addEventListener('pointerleave', () => { pointer = null; card.classList.remove('is-poking'); });
+    // capture, so the art (behind the items) knows the click was taken
+    card.addEventListener('pointerdown', (e) => {
+      if (reduceMotion) return;
+      const r = canvas.getBoundingClientRect();
+      const hit = hitAt(e.clientX - r.left, e.clientY - r.top);
+      if (hit) { e.mtHandled = true; toss(hit); }
+    }, true);
     let lastScroll = window.scrollY;
     window.addEventListener('scroll', () => {
       const d = window.scrollY - lastScroll;
@@ -669,29 +645,42 @@
       const [x, y, z] = world(it.u + it.ox, it.v + it.oy + bobY, it.z);
       const s = (it.size * 2 * halfH(it.z)) / Math.max(m.h, m.w * 0.8) * it.scale;
       const yaw = Math.sin(t * it.sp * 0.6 + it.ph) * 0.55 + it.yaw + it.spin;
-      const pitch = Math.sin(t * it.sp * 0.5 + it.ph * 1.7) * 0.22 + it.pitch;
-      const roll = Math.sin(t * it.sp * 0.4 + it.ph * 0.6) * 0.12;
+      const pitch = Math.sin(t * it.sp * 0.5 + it.ph * 1.7) * 0.22 + it.pitch + it.tumble;
+      const roll = Math.sin(t * it.sp * 0.4 + it.ph * 0.6) * 0.12 - it.tumble * 0.35;
       return M.model(x, y, z, pitch, yaw, roll, s);
     }
 
-    function pop(it) {
-      const t = performance.now() / 1000, mm = modelOf(it, t), m = models[it.m];
-      const center = M.apply(mm, [0, 0, 0]);
-      const pick = m.voxels.slice().sort(() => Math.random() - 0.5).slice(0, 48);
-      const s = Math.hypot(mm[0], mm[1], mm[2]);
-      pick.forEach(([x, y, z, col]) => {
-        const p = M.apply(mm, [x, y, z]);
-        const d = [p[0] - center[0], p[1] - center[1], p[2] - center[2]];
-        const len = Math.hypot(...d) || 1;
-        const sp = rand(3, 6.5);
-        const ax = [rand(-1, 1), rand(-1, 1), rand(-1, 1)], al = Math.hypot(...ax) || 1;
-        bits.push({ p, v: [d[0] / len * sp + rand(-0.6, 0.6), d[1] / len * sp + rand(1.2, 3.2), d[2] / len * sp + rand(0.5, 2)],
-          axis: ax.map((a) => a / al), ang: rand(0, 6), spin: rand(-10, 10), size: s * rand(2.2, 3.6), col, age: 0, life: rand(0.9, 1.4) });
-      });
+    // The toss: an arc from where the item is to the potion's neck on the sign (followed
+    // live, since the sign swings), tumbling end over end and shrinking as it drops in.
+    // Without the sign, it's flipped up and caught where it was.
+    function toss(it) {
+      const [x, y] = screen(it);
+      it.state = 'toss';
+      it.from = { x, y };
+      it.tt = 0;
+      it.toSign = !!signFx;
+      const to = target(it);
+      const dist = Math.hypot(to.x - x, to.y - y);
+      it.dur = it.toSign ? clamp(0.55 + dist / 1400, 0.6, 1.05) : 0.9;
+      // high enough to read as a toss, low enough that the peak stays inside the card
+      const room = (y + to.y) / 2 - radius(it) * 0.85 - 14;
+      it.arc = it.toSign ? clamp(Math.min(dist * 0.38, room), 24, 260) : clamp(y - radius(it) - 14, 0, ch * 0.22);
+      it.turns = (it.toSign ? 1 : 2) * (x > to.x ? -1 : 1);
+      it.vx = it.vy = 0;
+      it.sparkT = 0;
+    }
+    function target(it) {
+      if (!it.toSign || !signFx) return { x: it.u * cw, y: it.v * ch };
+      const n = signFx.neck(), r = canvas.getBoundingClientRect();
+      return { x: n.x - r.left, y: n.y - r.top };
+    }
+    function sparkle(it, mm) {
+      const p = M.apply(mm, [0, 0, 0]), s = Math.hypot(mm[0], mm[1], mm[2]) / Math.max(it.scale, 0.05);
+      const col = rgbOf(Math.random() < 0.5 ? it.tint : Math.random() < 0.5 ? 'fff4d6' : 'edd8a3');
+      const ax = [rand(-1, 1), rand(-1, 1), rand(-1, 1)], al = Math.hypot(...ax) || 1;
+      bits.push({ p: p.map((v) => v + rand(-0.12, 0.12)), v: [rand(-0.4, 0.4), rand(-0.2, 0.5), rand(-0.3, 0.3)], g: 1.2,
+        axis: ax.map((a) => a / al), ang: rand(0, 6), spin: rand(-8, 8), size: s * rand(1.6, 2.6), col, age: 0, life: rand(0.35, 0.6) });
       if (bits.length > MAXB) bits = bits.slice(bits.length - MAXB);
-      it.state = 'gone';
-      it.gone = 1.1;
-      it.scale = 0;
     }
 
     let t0 = performance.now() / 1000;
@@ -700,7 +689,23 @@
       for (const it of items) {
         if (it.state === 'gone') {
           it.gone -= dt;
-          if (it.gone <= 0) { it.state = 'in'; it.delay = 0; it.scale = 0; it.scaleV = 0; it.ox = 0; it.oy = 0; }
+          if (it.gone <= 0) { it.state = 'in'; it.delay = 0; it.scale = 0; it.scaleV = 0; it.ox = 0; it.oy = 0; it.vx = 0; it.vy = 0; it.tumble = 0; }
+          continue;
+        }
+        if (it.state === 'toss') {
+          it.tt = Math.min(1, it.tt + dt / it.dur);
+          const k = it.tt, e = k < 0.5 ? 2 * k * k : 1 - (2 - 2 * k) ** 2 / 2, to = target(it);
+          const x = it.from.x + (to.x - it.from.x) * e, y = it.from.y + (to.y - it.from.y) * k - it.arc * 4 * k * (1 - k);
+          it.ox = x / cw - it.u;
+          it.oy = y / ch - it.v;
+          it.tumble = it.turns * Math.PI * 2 * (1 - (1 - k) ** 2);
+          it.scale = it.toSign ? 1 - 0.85 * k ** 2.2 : 1;
+          it.sparkT -= dt;
+          if (it.sparkT <= 0) { it.sparkT = 0.022; sparkle(it, modelOf(it, t)); }
+          if (k >= 1) {
+            if (it.toSign) { signFx.splash(it.tint); it.state = 'gone'; it.gone = 0.9; it.scale = 0; }
+            else { it.state = 'idle'; it.ox = it.oy = 0; it.tumble = 0; it.vy = -0.25; }
+          }
           continue;
         }
         if (it.state === 'in') {
@@ -748,7 +753,7 @@
       bits = bits.filter((b) => (b.age += dt) < b.life);
       if (bits.length) {
         bits.forEach((b, i) => {
-          b.v[1] -= 9.5 * dt;
+          b.v[1] -= (b.g ?? 9.5) * dt;
           b.p[0] += b.v[0] * dt; b.p[1] += b.v[1] * dt; b.p[2] += b.v[2] * dt;
           b.ang += b.spin * dt;
           const k = b.age / b.life, s = b.size * (1 - k * k);
@@ -787,7 +792,7 @@
 
   const sign = card.querySelector('[data-mt-sign]');
   if (sign) initSign(sign);
-  initTilt();
+  initArt();
   const itemsCanvas = card.querySelector('[data-mt-items]');
   if (itemsCanvas) initItems(itemsCanvas);
 })();

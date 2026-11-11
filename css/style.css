@@ -42,6 +42,107 @@
   --header-h: 80px;
 }
 
+/* ---------- Paper theme (landing page only, for now) ----------
+   index.html opts in with <html class="theme-paper">; the case-study pages keep the dark
+   palette above. A light tan, cream page with near-black ink. Gold is a shade deeper here so
+   it still passes AA as hover text. The project screens and the Magetender card stay
+   dark, like devices and game art set on paper, so they re-declare the dark tokens
+   (see "Dark islands" below). */
+:root.theme-paper {
+  color-scheme: light;
+  --bg: #F3EBDC;
+  --bg-raised: #FBF7EF;
+  --ink: #1E1A15;
+  --ink-soft: #574E42;
+  --ink-faint: #665D4E;
+  --line: #E0D5C2;
+  --line-strong: #C9BCA4;
+  --green: #3F6B55;
+  --gold: #8C5F10;
+  --plum: #8E5670;
+  --shadow-sm: 0 10px 24px -10px rgba(140, 95, 16, 0.45);
+}
+
+/* Dark islands: everything inside these keeps the dark palette's tokens. */
+.theme-paper .slab,
+.theme-paper .mt-card {
+  --bg: #000000;
+  --bg-raised: #131313;
+  --ink: #F3EEDD;
+  --ink-soft: #A79E8A;
+  --ink-faint: #8C8370;
+  --line: #2A2A2A;
+  --line-strong: #3D3D3D;
+  --green: #4C7A63;
+  --gold: #D9A441;
+  --plum: #A56A82;
+}
+
+/* The scene's foreground fades into the paper instead of into black. */
+.theme-paper .hero::after {
+  background: linear-gradient(to bottom, rgba(243, 235, 220, 0), rgba(243, 235, 220, 0.82) 62%, var(--bg));
+}
+
+/* Paper sheets: every section below the intro is a sheet laid over the one before, with
+   a torn top edge (made in js/app.js, which adds .has-tear and the sheet's shade). The
+   sheet's color reaches the window's edges through border-image, which paints outside
+   the box without making the page scroll sideways. */
+.theme-paper {
+  --paper-light: #F9F4EA;
+  --paper-base: #F3EBDC;
+  --paper-kraft: #EADCC3;
+  --paper-fiber: #FFFDF7;
+}
+
+.theme-paper body { overflow-x: clip; }
+
+/* room between the shelf's tags and the first torn edge */
+.theme-paper .intro-hero { padding-bottom: var(--space-8); }
+
+.has-tear {
+  position: relative;
+  border-top: 0;
+  border-image: conic-gradient(var(--sheet) 0 0) fill 0 // 0 100vmax;
+}
+
+.sheet-light { --sheet: var(--paper-light); }
+.sheet-base { --sheet: var(--paper-base); }
+.sheet-kraft { --sheet: var(--paper-kraft); --gold: #7A530D; } /* gold a shade deeper to pass AA on kraft */
+
+.tear {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 100vw;
+  height: 30px;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.tear i { position: absolute; inset: 0; }
+.tear-fibers { background: var(--paper-fiber); }
+.tear-sheet { background: var(--sheet); }
+
+/* The shadow the sheet casts on the one below; it shifts as the sheet crosses the screen. */
+.tear-shadow {
+  filter: blur(2.5px);
+  translate: 0 calc(-2px - var(--tear-depth, 0.5) * 5px);
+}
+
+.tear-shadow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: var(--clip);
+  background: rgba(74, 50, 24, 0.24);
+}
+
+/* White social circles need an edge on a near-white page. */
+.theme-paper .social-icon {
+  border-color: var(--bg-raised);
+  box-shadow: 0 0 0 1px var(--line-strong), 0 6px 16px -8px rgba(30, 26, 21, 0.35);
+}
+
 * { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
@@ -373,13 +474,6 @@ a:focus-visible .hover-frame::after {
   color: var(--ink-soft);
 }
 
-.divider {
-  margin: 48px auto 36px;
-  border: none;
-  border-top: 1px solid var(--line);
-  max-width: var(--measure);
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .intro-anim {
     animation-name: intro-drop-in;
@@ -416,105 +510,270 @@ a:focus-visible .hover-frame::after {
   to { transform: translateY(-8px); }
 }
 
-/* ---------- Sections nav ---------- */
-
-.sections-label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--ink-faint);
-  margin-bottom: 22px;
-}
-
-.sections-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 18px 34px;
-}
-
-.section-link {
+/* ---------- Sections shelf ----------
+   A wooden shelf under the bio, lit by a warm lamp on the wall. Three 3D objects stand
+   on it (drawn by js/shelf.js on .shelf-canvas), with books and a cactus at the ends
+   when there's room. The luggage tags hanging from the plank are the links. The small
+   icons in each spot are what shows without WebGL. */
+.shelf {
+  --spot-h: clamp(96px, 15vw, 160px);
+  --plank-h: 34px;
+  --plank-out: 15%;   /* how far the plank reaches past the tags, room for the decorations */
+  --canvas-out: calc(var(--plank-out) + 24px);
   position: relative;
+  isolation: isolate;
+  max-width: 760px;
+  margin: var(--space-7) auto 0;
+}
+
+/* The lamp: a warm pool of light on the wall behind the shelf. */
+.shelf::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: calc(-1 * var(--plank-out));
+  right: calc(-1 * var(--plank-out));
+  top: -90px;
+  height: calc(var(--spot-h) + 150px);
+  background: radial-gradient(50% 58% at 50% 62%, rgba(255, 236, 200, 0.75), rgba(255, 236, 200, 0) 72%);
+  pointer-events: none;
+}
+
+.shelf-list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(6px, 3vw, 40px);
+}
+
+.shelf-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  background: var(--bg-raised);
-  border: 1.5px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  padding: 6px 22px 6px 6px;
-  margin: 0;
-  font-family: var(--sans);
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
   color: var(--ink);
-  width: fit-content;
-  transform: scale(1);
-  transform-origin: bottom center;
-  transition: transform var(--motion-fast) var(--ease-out), border-color var(--motion-base) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard);
-  will-change: transform;
-  perspective: 500px;
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.section-link:disabled {
-  cursor: not-allowed;
-  color: var(--ink-faint);
-}
-
-.section-icon {
+.shelf-spot {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: color var(--motion-base) var(--ease-standard);
+  width: 100%;
+  height: var(--spot-h);
+  padding-bottom: 10px;
 }
 
-.section-icon svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  color: var(--ink-soft);
-}
-
-.section-icon svg.icon-pixel {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-  stroke: none;
+.shelf-still {
+  width: 42%;
+  height: 62%;
+  color: var(--gold);
+  fill: var(--gold);
   shape-rendering: crispEdges;
 }
 
-.section-link:disabled .section-icon svg { color: var(--ink-faint); }
-
-.section-link:not(:disabled):hover,
-.section-link:not(:disabled):focus-visible {
-  border-color: var(--gold);
-  box-shadow: var(--shadow-sm);
-  z-index: 2;
+.shelf-still:not(.icon-pixel) {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  shape-rendering: auto;
 }
 
-.section-link:not(:disabled):hover .section-icon svg,
-.section-link:not(:disabled):focus-visible .section-icon svg {
-  color: var(--gold);
+.shelf.is-live .shelf-still { visibility: hidden; }
+
+/* The plank, seen a little from above: a lit top face with a bright front edge, then
+   the front with grain running along it, darker end grain at both ends, and a soft
+   shadow cast on the wall below. */
+.shelf-plank {
+  --top: 12px;
+  position: absolute;
+  z-index: 0;
+  left: calc(-1 * var(--plank-out));
+  right: calc(-1 * var(--plank-out));
+  top: var(--spot-h);
+  height: var(--plank-h);
+  border-radius: 5px 5px 4px 4px;
+  background:
+    /* top face: darker toward the wall, bright where it turns the front edge */
+    linear-gradient(180deg, #C9925C 0, #D9A570 calc(var(--top) - 2px), #F0C894 calc(var(--top) - 1px), #E2AE78 var(--top), rgba(0, 0, 0, 0) var(--top)),
+    /* grain on the front, long streaks of slightly different tone */
+    linear-gradient(180deg, rgba(0, 0, 0, 0) calc(var(--top) + 5px), rgba(90, 52, 24, 0.16) calc(var(--top) + 6px), rgba(0, 0, 0, 0) calc(var(--top) + 8px), rgba(0, 0, 0, 0) calc(var(--top) + 13px), rgba(255, 220, 170, 0.12) calc(var(--top) + 14px), rgba(0, 0, 0, 0) calc(var(--top) + 16px)),
+    repeating-linear-gradient(92deg, rgba(90, 52, 24, 0) 0 40px, rgba(90, 52, 24, 0.07) 40px 90px, rgba(90, 52, 24, 0) 90px 170px),
+    /* the front face itself */
+    linear-gradient(180deg, #B97E46 var(--top), #A86D3A 60%, #8E5A2F 100%);
+  box-shadow:
+    inset 6px 0 0 -2px rgba(80, 46, 20, 0.45),
+    inset -6px 0 0 -2px rgba(80, 46, 20, 0.45),
+    inset 0 -2px 0 rgba(60, 34, 14, 0.35),
+    0 26px 26px -20px rgba(70, 40, 18, 0.55),
+    0 4px 6px -2px rgba(70, 40, 18, 0.25);
 }
 
-.section-name {
-  font-size: 15px;
-  font-weight: 500;
+/* Curled iron brackets under each end. */
+.shelf-plank::before,
+.shelf-plank::after {
+  content: '';
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 9%;
+  width: 34px;
+  height: 46px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 46' fill='none' stroke='%233b2a20' stroke-linecap='round'%3E%3Cpath d='M2 2H33M2 2V44' stroke-width='3.5'/%3E%3Cpath d='M3 40C6 24 17 9 31 3' stroke-width='2.6'/%3E%3Cpath d='M8 8c6-1 11 3 11 8s-4 7-7 6-4-4-2-6 4-1 4 1' stroke-width='2.2'/%3E%3Ccircle cx='2.5' cy='9' r='1' fill='%23c89b4a' stroke='none'/%3E%3Ccircle cx='2.5' cy='37' r='1' fill='%23c89b4a' stroke='none'/%3E%3C/svg%3E") no-repeat;
+  filter: drop-shadow(0 3px 2px rgba(60, 34, 14, 0.25));
+}
+
+.shelf-plank::after { left: auto; right: 9%; transform: scaleX(-1); }
+
+/* Contact shadows on the plank's top face, one per object (made in the script). */
+.shelf-shadow {
+  position: absolute;
+  top: calc(var(--top) - 9px);
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(70, 38, 14, 0.5), rgba(70, 38, 14, 0));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The tags: luggage tags with clipped corners and a brass eyelet, hung on twine from a
+   nail in the plank's front edge. The outer span carries the swing and the shadow, the
+   inner one the paper (its clip-path would cut a shadow or an outline off). */
+.shelf-tag {
+  --tilt: -2.5deg;
+  position: relative;
+  display: block;
+  margin-top: calc(var(--plank-h) + 12px);
+  transform-origin: 50% -30px;
+  rotate: var(--tilt);
+  filter: drop-shadow(0 6px 5px rgba(30, 26, 21, 0.2));
+  border-radius: 4px;
+}
+
+.shelf-tag::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 10px);
+  width: 10px;
+  height: 36px;
+  translate: -50% 0;
+  background:
+    radial-gradient(circle at 50% 5px, #F3E3B8 0 1.4px, #8A6A44 1.9px 3.6px, rgba(0, 0, 0, 0) 4px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 4.2px, #8A6A44 4.2px 5.8px, rgba(0, 0, 0, 0) 5.8px) 0 6px / 100% calc(100% - 6px) no-repeat;
+}
+
+.shelf-tag-paper {
+  position: relative;
+  display: block;
+  padding: 19px clamp(12px, 1.6vw, 18px) 9px;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 10px);
+  background: linear-gradient(180deg, #FFFDF8, #F5EDDD);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
   white-space: nowrap;
+  transition: color var(--motion-base) var(--ease-standard);
 }
+
+/* The eyelet: a brass ring with the wall showing through. */
+.shelf-tag-paper::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg) 0 2.2px, #B98A3E 2.7px 4.2px, #8C6420 4.6px 5px, rgba(0, 0, 0, 0) 5px);
+}
+
+.shelf-list li:nth-child(2) .shelf-tag { --tilt: 1.8deg; }
+.shelf-list li:nth-child(3) .shelf-tag { --tilt: -1.2deg; }
+
+.shelf-item:hover .shelf-tag-paper,
+.shelf-item:focus-visible .shelf-tag-paper { color: var(--gold); }
+
+.shelf-item:focus-visible .shelf-tag {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-item:hover .shelf-tag,
+  .shelf-item:focus-visible .shelf-tag { animation: shelf-tag-swing 1100ms ease-out; }
+}
+
+@keyframes shelf-tag-swing {
+  0% { rotate: var(--tilt); }
+  18% { rotate: 7deg; }
+  40% { rotate: -5deg; }
+  62% { rotate: 2.5deg; }
+  82% { rotate: -1deg; }
+  100% { rotate: var(--tilt); }
+}
+
+/* The objects' canvas reaches past the plank and above it, so the decorations fit and a
+   hop or a lean is never cut off. */
+.shelf-canvas {
+  position: absolute;
+  z-index: 2;
+  left: calc(-1 * var(--canvas-out));
+  top: -84px;
+  width: calc(100% + 2 * var(--canvas-out));
+  height: calc(var(--spot-h) + 84px + var(--plank-h));
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .shelf { --plank-out: 3%; --canvas-out: 16px; --plank-h: 30px; }
+  .shelf-plank::before { left: 4%; }
+  .shelf-plank::after { right: 4%; }
+}
+
+@media (max-width: 420px) {
+  .shelf-tag-paper { white-space: normal; }
+}
+
+/* The flight down the page draws on a canvas fixed over the whole window. */
+.shelf-flight {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.shelf-flight.is-on { visibility: visible; }
+
+/* A section's ring when an object lands in it: a ripple on top of the squash. */
+.category-icon-wrap { position: relative; }
+
+.category-icon-wrap.is-caught::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ring-catch 700ms ease-out forwards;
+}
+
+@keyframes ring-catch {
+  from { opacity: 0.9; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.7); }
+}
+
+/* Focus moves to the section after a flight; the section itself needs no ring. */
+main > .category:focus { outline: none; }
 
 /* ---------- Category sections ---------- */
 
@@ -542,6 +801,7 @@ a:focus-visible .hover-frame::after {
   border-radius: 50%;
   border: 2px solid var(--gold);
   background: var(--bg-raised);
+  color: var(--gold); /* the pixel icons fill with currentColor */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -849,19 +1109,23 @@ a:focus-visible .hover-frame::after {
    card's top edge, and the key art (right) tilts toward the cursor with 3D ingredients
    floating around it. Motion lives in js/magetender.js. */
 .mt-card {
-  --mt-pad: clamp(24px, 4.6vw, 64px);
+  --mt-pad: clamp(24px, 4.6vw, 72px);
   --mt-cream: #F6E7C1;
   --mt-gold: #EDD8A3;
   --mt-lilac: #D191F2;
+  /* Wider than the page column: up to 1400px, keeping a gutter from the window edge. */
+  --mt-w: min(1400px, calc(100vw - 2 * clamp(16px, 3vw, 44px)));
   --gx: 74%;
   --gy: 46%;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 5.2fr) minmax(0, 6fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   align-items: center;
-  gap: clamp(28px, 4.5vw, 72px);
+  gap: clamp(28px, 4.5vw, 80px);
+  width: var(--mt-w);
   margin-top: 56px;
+  margin-inline: calc((100% - var(--mt-w)) / 2);
   padding: 0 var(--mt-pad) var(--mt-pad);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(237, 216, 163, 0.14);
@@ -888,7 +1152,7 @@ a:focus-visible .hover-frame::after {
 .mt-sign {
   position: relative;
   display: block;
-  width: min(100%, 560px);
+  width: min(100%, 576px); /* 576px = the sign's native size, so its pixels stay even */
   aspect-ratio: 576 / 296;
   margin-left: -3%;
   cursor: grab;
@@ -935,7 +1199,7 @@ a:focus-visible .hover-frame::after {
   margin: 20px 0 0;
   padding: 0;
   width: 100%;
-  max-width: 48ch;
+  max-width: 54ch;
   list-style: none;
 }
 
@@ -1049,64 +1313,116 @@ a:focus-visible .hover-frame::after {
   border-bottom: 5px solid transparent;
 }
 
-/* Key art: tilts toward the cursor (--rx/--ry) while the picture inside drifts the other way (--px/--py). */
+/* Key art: a thick slab held at an angle, turned toward the copy. js/magetender.js sways
+   it, leans it toward the cursor and flips it on click; this rest pose is what shows
+   without motion. The picture drifts against the lean (--px/--py) and a glare slides
+   across it as it turns (--glx/--gly). */
 .mt-art {
-  --rx: 0deg;
-  --ry: 0deg;
   position: relative;
   align-self: center;
-  width: min(100%, 420px);
+  width: min(100%, 498px); /* 498px = the art at exactly 2x */
   justify-self: center;
-  margin-top: var(--mt-pad);
-  perspective: 1100px;
+  margin-block: calc(var(--mt-pad) + 16px) var(--mt-pad);
+  perspective: 1500px;
+  perspective-origin: 30% 40%;
 }
 
 .mt-frame {
   position: relative;
   aspect-ratio: 249 / 298;
+  transform-style: preserve-3d;
+  transform: rotateX(6deg) rotateY(-16deg) rotateZ(-2.5deg);
+  cursor: pointer;
+  will-change: transform;
+}
+
+.mt-face {
+  position: absolute;
+  inset: 0;
   border-radius: 14px;
   overflow: hidden;
   background: #2C1A48;
-  box-shadow: 0 0 0 1px rgba(237, 216, 163, 0.22), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: inset 0 0 0 2px rgba(243, 223, 166, 0.55), inset 0 0 0 4px rgba(30, 17, 48, 0.35);
 }
 
-.mt-art.is-tracking .mt-frame { transition-duration: 0.16s; }
+/* The glare: a soft light twice the face's size, slid across it with a transform
+   (set by the script) so moving it never repaints the picture. */
+.mt-face::after {
+  content: '';
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(30% 24% at 50% 50%, rgba(255, 244, 214, 0.2), rgba(255, 244, 214, 0) 100%);
+  transform: translate(var(--glx, 18%), var(--gly, -12%));
+  will-change: transform;
+  pointer-events: none;
+}
 
-.mt-frame img {
+.mt-face img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
-  scale: 1.07;
-  translate: calc(var(--px, 0) * -8px) calc(var(--py, 0) * -6px);
-  transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1), translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -6px)) scale(1.07);
+  will-change: transform;
 }
 
-.mt-card:hover .mt-frame img { scale: 1.09; }
+/* The slab's thickness: rounded layers stacked behind the face (made in the script). */
+.mt-slice {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  transform: translateZ(var(--z));
+  pointer-events: none;
+}
 
-/* The 3D items spill past the frame on every side. */
+/* The back, seen mid-flip: dusk purple inside a gold border. */
+.mt-slice--back {
+  background:
+    radial-gradient(60% 50% at 50% 45%, rgba(209, 145, 242, 0.35), rgba(209, 145, 242, 0) 70%),
+    #241238;
+  box-shadow: inset 0 0 0 3px #5a3a22, inset 0 0 0 6px #b98a4c, 0 40px 70px -28px rgba(0, 0, 0, 0.75);
+}
+
+/* A soft shadow on the "floor" below the slab, tighter as it floats up. */
+.mt-art::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -10%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(8, 3, 16, 0.6), rgba(8, 3, 16, 0));
+  scale: calc(1 + var(--lift, 0) * 0.25);
+  opacity: calc(0.85 + var(--lift, 0) * 0.3);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* The 3D items: one canvas over the whole card, so a tossed item is never cut off
+   before the card's own edge. */
 .mt-items {
   position: absolute;
-  inset: -16% -22%;
-  width: 144%;
-  height: 132%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
 }
 
-.mt-art.is-poking { cursor: pointer; }
+.mt-card.is-poking { cursor: pointer; }
 
 @media (max-width: 960px) {
   .mt-card { grid-template-columns: minmax(0, 1fr); }
-  .mt-art { width: min(78%, 380px); margin: 24px auto 40px; }
+  .mt-art { width: min(68%, 380px); margin: 28px auto 56px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mt-frame,
-  .mt-frame img { transform: none !important; translate: none !important; transition: none !important; }
+  .mt-face img { translate: none !important; transition: none !important; }
   .mt-btn { transition: none; }
 }
 
@@ -1448,6 +1764,8 @@ a:focus-visible .hover-frame::after {
   .site-header-nav { gap: var(--space-2); width: 100%; justify-content: space-between; }
   .site-header-name { display: inline-flex; align-items: center; min-height: 24px; }
   .site-header-link { font-size: 14px; }
+  /* "Game" and "Graphic" on phones; the full names stay for screen readers */
+  .nav-long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .hero-content { padding-top: var(--space-3); }
   .intro-headline {
     grid-template-columns: auto auto;
@@ -1464,7 +1782,6 @@ a:focus-visible .hover-frame::after {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .category-icon { transition: none !important; }
-  .section-link { transition: border-color var(--motion-base) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard) !important; }
   .slab,
   .slab-screen img,
   .slab-screen video,

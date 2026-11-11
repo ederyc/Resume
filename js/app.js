@@ -27,6 +27,8 @@ function initSpinIcon(el) {
     const y = window.scrollY;
     const delta = y - lastY;
     lastY = y;
+    // a shelf object is flying down to its ring (js/shelf.js); the ring waits to catch it
+    if (document.documentElement.classList.contains('is-shelf-flying')) return;
     if (inView && delta !== 0) {
       velocity = Math.max(-maxVelocity, Math.min(maxVelocity, velocity + delta * scrollSensitivity));
       startLoop();
@@ -52,81 +54,6 @@ function initSpinIcon(el) {
 }
 
 document.querySelectorAll('[data-spin-icon]').forEach(initSpinIcon);
-
-function initDockNav(list) {
-  const items = Array.from(list.querySelectorAll('.section-link'));
-  if (prefersReducedMotion || items.length === 0) return;
-
-  const maxScale = 1.45;     // fixed size the moment the cursor is actually over a pill
-  const neighborCap = 1;  // ceiling for proximity growth on every other pill —
-                              // kept below maxScale so landing on a pill is a visible jump
-  const sigma = 150;         // how far proximity influence reaches, in px
-  const spinDuration = 480;  // ms for the quick hover spin
-
-  let activeIndex = -1;
-
-  function spinIcon(item) {
-    const icon = item.querySelector('.section-icon');
-    if (!icon) return;
-    icon.getAnimations().forEach((anim) => anim.cancel());
-    icon.animate(
-      [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }],
-      { duration: spinDuration, easing: 'ease-in-out' }
-    );
-  }
-
-  function setActive(newIndex) {
-    if (newIndex === activeIndex) return;
-    activeIndex = newIndex;
-    if (newIndex !== -1) spinIcon(items[newIndex]);
-  }
-
-  function onMove(e) {
-    const rects = items.map((item) => item.getBoundingClientRect());
-    let hovered = -1;
-    rects.forEach((rect, i) => {
-      if (e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom) {
-        hovered = i;
-      }
-    });
-
-    setActive(hovered);
-
-    items.forEach((item, i) => {
-      if (i === hovered) {
-        item.style.transform = `scale(${maxScale})`;
-        return;
-      }
-      const rect = rects[i];
-      const center = rect.left + rect.width / 2;
-      const distance = e.clientX - center;
-      const falloff = Math.exp(-(distance * distance) / (2 * sigma * sigma));
-      const scale = 1 + (neighborCap - 1) * falloff;
-      item.style.transform = scale > 1.001 ? `scale(${scale})` : '';
-    });
-  }
-
-  function reset() {
-    items.forEach((item) => { item.style.transform = ''; });
-    activeIndex = -1;
-  }
-
-  list.addEventListener('mousemove', onMove);
-  list.addEventListener('mouseleave', reset);
-
-  items.forEach((item, i) => {
-    item.addEventListener('focus', () => {
-      items.forEach((it, j) => { it.style.transform = j === i ? `scale(${maxScale})` : ''; });
-      setActive(i);
-    });
-  });
-  list.addEventListener('focusout', (e) => {
-    if (!list.contains(e.relatedTarget)) reset();
-  });
-}
-
-document.querySelectorAll('.sections-list').forEach(initDockNav);
 
 function replayIntroAnimation() {
   if (prefersReducedMotion) return;
@@ -378,3 +305,70 @@ document.querySelectorAll('[data-slab]').forEach((slab) => {
   if (slab.dataset.live) initSlabLive(slab);
   else initSlabVideo(slab);
 });
+
+// Paper sheets (landing page, paper theme): each section below the intro is its own sheet
+// of paper laid over the one before, with a torn top edge. The edge is three clip-path
+// layers made here (a soft shadow, the pale fibers where the paper tore, and the sheet),
+// each torn along the same random line so no two edges match. As a sheet scrolls through
+// the screen its shadow shifts a little, so the layers read as having depth.
+function initPaperSheets() {
+  if (!document.documentElement.classList.contains('theme-paper')) return;
+  const sheets = document.querySelectorAll('main > .category, main > .design-system, .site-footer');
+  if (!sheets.length) return;
+
+  // A small seeded random, so an edge is the same on every visit.
+  const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+
+  function tear(seed, height) {
+    const r = rng(seed);
+    const steps = 90;
+    const top = [], rim = [];
+    const f1 = 2 + r() * 3, f2 = 7 + r() * 6, p1 = r() * 6.3, p2 = r() * 6.3;
+    for (let i = 0; i <= steps; i++) {
+      const x = (i / steps) * 100;
+      const wave = Math.sin((x / 100) * f1 * Math.PI + p1) * 0.22 + Math.sin((x / 100) * f2 * Math.PI + p2) * 0.1;
+      const y = height * (0.5 + wave + (r() - 0.5) * 0.3);
+      const yy = Math.max(1, Math.min(height - 4, y));
+      top.push(`${x.toFixed(2)}% ${yy.toFixed(1)}px`);
+      rim.push(`${x.toFixed(2)}% ${(yy + 1.5 + r() * 2.5).toFixed(1)}px`); // fibers show a little below the tear
+    }
+    const poly = (pts) => `polygon(0% 100%, ${pts.join(', ')}, 100% 100%)`;
+    return { fibers: poly(top), sheet: poly(rim) };
+  }
+
+  const tears = [];
+  sheets.forEach((sheet, n) => {
+    sheet.classList.add('has-tear', sheet.classList.contains('site-footer') ? 'sheet-kraft' : n % 2 ? 'sheet-base' : 'sheet-light');
+    const edge = document.createElement('span');
+    edge.className = 'tear';
+    edge.setAttribute('aria-hidden', 'true');
+    const height = 30;
+    const { fibers, sheet: body } = tear(n * 7919 + 101, height);
+    edge.innerHTML = '<i class="tear-shadow"></i><i class="tear-fibers"></i><i class="tear-sheet"></i>';
+    edge.querySelector('.tear-shadow').style.setProperty('--clip', fibers); // shaped inside, blurred outside
+    edge.querySelector('.tear-fibers').style.clipPath = fibers;
+    edge.querySelector('.tear-sheet').style.clipPath = body;
+    sheet.prepend(edge);
+    tears.push(edge);
+  });
+
+  if (prefersReducedMotion) return;
+  const onScreen = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)));
+    update();
+  });
+  tears.forEach((t) => io.observe(t));
+  let raf = 0;
+  function update() {
+    raf = 0;
+    const h = window.innerHeight;
+    onScreen.forEach((t) => {
+      const y = t.getBoundingClientRect().top / h; // 0 at the top of the screen, 1 at the bottom
+      t.style.setProperty('--tear-depth', (Math.max(-0.2, Math.min(1.2, y))).toFixed(3));
+    });
+  }
+  window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+}
+
+initPaperSheets();

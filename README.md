@@ -1,7 +1,7 @@
 # Eder Yepez Cuevas — Portfolio
 
-A single-page portfolio site: a photo/bio intro with a "Sections" index
-(Game Design, Music/Sound Design, UX/UI), horizontal per-section pages —
+A single-page portfolio site: a photo/bio intro with a sections shelf
+(Game Design, Graphic Design, UX/UI), horizontal per-section pages —
 currently just Game Design, featuring Magetender — and contact links.
 
 No build step, no dependencies. Plain HTML, CSS, and JS.
@@ -42,8 +42,8 @@ Then visit `http://localhost:8000`.
   (`#game-design` in `index.html`) is an `<article class="project-row">`
   with a square `.project-image` and `.project-copy` text block. Duplicate
   that structure for more Game Design projects, and add new `<section
-  class="category">` blocks (with a matching entry in `.sections-list`)
-  for Music/Sound Design and UX/UI (FlowDock, the web/React projects) when
+  class="category">` blocks (with a matching tag on the shelf, `.shelf-list`)
+  for Graphic Design and UX/UI (FlowDock, the web/React projects) when
   they're ready to show.
 - **Project images:** `.project-image` is currently a dashed placeholder box.
   Replace its inner `<span>` with an `<img>` once real project screenshots
