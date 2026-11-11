@@ -844,6 +844,272 @@ a:focus-visible .hover-frame::after {
   to { opacity: 0.35; }
 }
 
+/* ---------- Magetender feature card ----------
+   A dusk-purple card in the game's own colors: the hanging sign (left) swings from the
+   card's top edge, and the key art (right) tilts toward the cursor with 3D ingredients
+   floating around it. Motion lives in js/magetender.js. */
+.mt-card {
+  --mt-pad: clamp(24px, 4.6vw, 64px);
+  --mt-cream: #F6E7C1;
+  --mt-gold: #EDD8A3;
+  --mt-lilac: #D191F2;
+  --gx: 74%;
+  --gy: 46%;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 5.2fr) minmax(0, 6fr);
+  align-items: center;
+  gap: clamp(28px, 4.5vw, 72px);
+  margin-top: 56px;
+  padding: 0 var(--mt-pad) var(--mt-pad);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(237, 216, 163, 0.14);
+  background:
+    radial-gradient(42% 52% at var(--gx) var(--gy), rgba(232, 160, 74, 0.2), rgba(232, 160, 74, 0) 70%),
+    radial-gradient(50% 60% at 76% 48%, rgba(161, 86, 199, 0.32), rgba(161, 86, 199, 0) 72%),
+    linear-gradient(180deg, #2C1A48 0%, #1E1130 52%, #140A22 100%);
+  color: var(--mt-cream);
+  text-align: left;
+  overflow: clip;
+  transition: background-position var(--motion-slow) var(--ease-out);
+}
+
+.mt-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.mt-title { width: 100%; margin: 0; line-height: 0; }
+
+/* The sign hangs from the card's top edge, so its chains start at the border. */
+.mt-sign {
+  position: relative;
+  display: block;
+  width: min(100%, 560px);
+  aspect-ratio: 576 / 296;
+  margin-left: -3%;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.mt-sign:active { cursor: grabbing; }
+
+.mt-sign img,
+.mt-sign canvas {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  image-rendering: pixelated;
+  transform-origin: 50% 0;
+}
+
+.mt-sign img { top: 0; height: 100%; }
+.mt-sign.is-live img { visibility: hidden; }
+.mt-sign canvas { will-change: transform; }
+
+.mt-credit {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mt-gold);
+}
+
+.mt-oneliner {
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-size: clamp(24px, 1.2rem + 1vw, 32px);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--mt-cream);
+}
+
+.mt-hooks {
+  margin: 20px 0 0;
+  padding: 0;
+  width: 100%;
+  max-width: 48ch;
+  list-style: none;
+}
+
+.mt-hooks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding-block: 12px;
+  border-top: 1px solid rgba(237, 216, 163, 0.14);
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(246, 231, 193, 0.9);
+}
+
+.mt-hooks li:last-child { border-bottom: 1px solid rgba(237, 216, 163, 0.14); }
+
+.mt-hook-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  fill: var(--mt-lilac);
+  shape-rendering: crispEdges;
+  transition: translate var(--motion-base) var(--ease-out);
+}
+
+.mt-hooks li:nth-child(2) .mt-hook-icon { fill: #E8A04A; }
+.mt-hooks li:nth-child(3) .mt-hook-icon { fill: #9FBFE2; }
+.mt-hooks li:hover .mt-hook-icon { translate: 0 -2px; }
+
+.mt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mt-tags li {
+  padding: 6px 12px;
+  border: 1px solid rgba(237, 216, 163, 0.32);
+  border-radius: var(--radius-pill);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(246, 231, 193, 0.82);
+}
+
+.mt-tags .mt-tag-sun {
+  border-color: transparent;
+  background: var(--mt-gold);
+  color: #1E1130;
+  font-weight: 600;
+}
+
+.mt-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.mt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid rgba(246, 231, 193, 0.4);
+  border-radius: var(--radius-pill);
+  color: var(--mt-cream);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: border-color var(--motion-fast) var(--ease-standard), translate var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-out);
+}
+
+.mt-btn:hover { border-color: var(--mt-cream); translate: 0 -2px; }
+.mt-btn:active { translate: 0 0; transition-duration: 90ms; }
+.mt-btn:focus-visible { outline: 3px solid var(--mt-gold); outline-offset: 3px; }
+.mt-btn[hidden] { display: none; }
+.mt-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+.mt-btn--steam {
+  border-color: transparent;
+  background: var(--gold);
+  color: #1A1006;
+  box-shadow: 0 10px 30px -10px rgba(217, 164, 65, 0.7);
+}
+
+.mt-btn--steam:hover { border-color: transparent; box-shadow: 0 14px 36px -10px rgba(217, 164, 65, 0.9); }
+
+.mt-play {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #E8A04A;
+  clip-path: none;
+  position: relative;
+}
+
+.mt-play::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  border-left: 8px solid #1A1006;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+/* Key art: tilts toward the cursor (--rx/--ry) while the picture inside drifts the other way (--px/--py). */
+.mt-art {
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  align-self: center;
+  width: min(100%, 420px);
+  justify-self: center;
+  margin-top: var(--mt-pad);
+  perspective: 1100px;
+}
+
+.mt-frame {
+  position: relative;
+  aspect-ratio: 249 / 298;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #2C1A48;
+  box-shadow: 0 0 0 1px rgba(237, 216, 163, 0.22), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mt-art.is-tracking .mt-frame { transition-duration: 0.16s; }
+
+.mt-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  scale: 1.07;
+  translate: calc(var(--px, 0) * -8px) calc(var(--py, 0) * -6px);
+  transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1), translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mt-card:hover .mt-frame img { scale: 1.09; }
+
+/* The 3D items spill past the frame on every side. */
+.mt-items {
+  position: absolute;
+  inset: -16% -22%;
+  width: 144%;
+  height: 132%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mt-art.is-poking { cursor: pointer; }
+
+@media (max-width: 960px) {
+  .mt-card { grid-template-columns: minmax(0, 1fr); }
+  .mt-art { width: min(78%, 380px); margin: 24px auto 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-frame,
+  .mt-frame img { transform: none !important; translate: none !important; transition: none !important; }
+  .mt-btn { transition: none; }
+}
+
 .project-copy h3 {
   font-size: 26px;
 }

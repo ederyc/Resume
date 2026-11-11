@@ -147,23 +147,46 @@
 
     <p class="category-intro"></p>
 
-    <div class="project-list">
-      <article class="project-row">
-        <!-- Gameplay clip goes here: add data-webm / data-mp4 and swap the img for a <video> like Steadyhand's. -->
-        <div class="slab" data-slab style="--slab-glow: var(--plum)">
-          <a class="slab-screen" href="magetender.html" aria-label="View Magetender project page">
-            <img src="assets/images/MagetenderCover.jpg" alt="Magetender cover art: a pixel-art wizard's tavern and tower at dusk" loading="lazy" width="460" height="215" style="object-position: 0% 50%">
-            <span class="slab-label" aria-hidden="true">View the project</span>
+    <!-- Magetender feature card. The sign, items and tilt are in js/magetender.js; every image is the game's own pixel art at native size (assets/magetender/). -->
+    <article class="mt-card" data-mt-card>
+      <div class="mt-copy">
+        <h3 class="mt-title">
+          <span class="visually-hidden">Magetender</span>
+          <span class="mt-sign" data-mt-sign data-src="assets/magetender/sign.png" aria-hidden="true">
+            <img class="mt-sign-still" src="assets/magetender/sign.png" alt="" width="576" height="296">
+          </span>
+        </h3>
+        <p class="mt-credit">A Team TAAAZED game &middot; 2025&ndash;present</p>
+        <p class="mt-oneliner">Mix the right drink, or defend the bar.</p>
+        <ul class="mt-hooks">
+          <li><svg class="mt-hook-icon" viewBox="0 0 8 8" aria-hidden="true"><path d="M3 0h2v1H3zM3 1h2v2h1v1h1v3H6v1H2V7H1V4h1V3h1z"/></svg>Read each customer&rsquo;s mood and mix a drink that moves it where they want to go.</li>
+          <li><svg class="mt-hook-icon" viewBox="0 0 8 8" aria-hidden="true"><path d="M3 0h2v1H3zM3 1h2v2h1v1h1v3H6v1H2V7H1V4h1V3h1z"/></svg>When an order goes wrong, defend the bar with quick-time spells.</li>
+          <li><svg class="mt-hook-icon" viewBox="0 0 8 8" aria-hidden="true"><path d="M3 0h2v1H3zM3 1h2v2h1v1h1v3H6v1H2V7H1V4h1V3h1z"/></svg>My part: the combat manager, the Shader Graph UI, and every accessibility feature, end to end.</li>
+        </ul>
+        <ul class="mt-tags" aria-label="Details">
+          <li>Unity (URP)</li>
+          <li>C# &amp; Shader Graph</li>
+          <li>Accessibility lead</li>
+          <li class="mt-tag-sun">On Steam</li>
+        </ul>
+        <div class="mt-ctas">
+          <a class="mt-btn mt-btn--steam" href="https://store.steampowered.com/app/4709570/MageTender/">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-steam"></use></svg>Wishlist on Steam
           </a>
+          <!-- Trailer: add the link here (href) and remove the hidden attribute. -->
+          <a class="mt-btn" href="#" hidden data-mt-trailer>
+            <span class="mt-play" aria-hidden="true"></span>Watch the trailer
+          </a>
+          <a class="mt-btn" href="magetender.html">See the project <span aria-hidden="true">&rarr;</span></a>
         </div>
-        <div class="project-copy">
-          <h3>Magetender</h3>
-          <p class="project-meta">Unity (URP) / C# / 2025&ndash;present</p>
-          <p>Magetender is a 2D fantasy game about a wizard-school dropout running a bar — mixing magical drinks to match a customer's mood, then defending the bar with a quick-time spell system when an order goes badly. I built it over six months with an interdisciplinary team, Team TAAAZED, designing the combat manager and Shader Graph-based UI, and owning every accessibility feature end to end: full controller support with a custom virtual-mouse system, colorblind-accessible UI, Spanish and Arabic localization, one-handed and touch-friendly controls, and sound accessibility.</p>
-          <a class="steam-link hover-frame" href="https://store.steampowered.com/app/4709570/MageTender/">Wishlist Magetender on Steam</a>
+      </div>
+      <div class="mt-art" data-mt-art>
+        <div class="mt-frame">
+          <img src="assets/magetender/keyart.png" alt="Magetender's title screen: the logo over a timber-framed tavern and a stone wizard tower at dusk" width="249" height="298" loading="lazy">
         </div>
-      </article>
-    </div>
+        <canvas class="mt-items" data-mt-items aria-hidden="true"></canvas>
+      </div>
+    </article>
   </section>
 
   <section class="category" id="music-design">
@@ -403,6 +426,7 @@
   <p class="footer-fine">Eder Yepez Cuevas — Lodi, CA</p>
 </footer>
 
+<script src="js/magetender.js" defer></script>
 <script src="js/app.js"></script>
 </body>
 </html>
