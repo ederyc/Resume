@@ -300,7 +300,81 @@ function initSlabVideo(slab) {
   sync();
 }
 
+// A live slab runs the real thing instead of a recording: a scene exported from the
+// Elaborate Backgrounds editor as a live wallpaper, in an iframe under the screen link.
+// It loads the first time the window is on screen, plays only while it's on screen,
+// and the button pauses it. The scene's player answers postMessage({ player: 'play' | 'pause' })
+// and says { player: 'ready' } once its first frame is drawn, which swaps out the poster.
+function initSlabLive(slab) {
+  const toggle = slab.querySelector('.slab-toggle');
+  if (!toggle) return;
+  const label = toggle.querySelector('.visually-hidden');
+  const name = slab.dataset.name || 'project';
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+
+  let wanted = !prefersReducedMotion && !saveData;
+  let onScreen = false;
+  let frame = null;
+  let ready = false;
+  let loadTimer = 0;
+
+  // Starting the scene costs the page one short stall (about 140 ms on a laptop GPU), so it
+  // waits until scrolling has settled and the browser is idle, and never lands mid-scroll.
+  function loadWhenStill() {
+    if (frame) return;
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(() => {
+      loadTimer = 0;
+      if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 1000 });
+      else load();
+    }, 200);
+  }
+  window.addEventListener('scroll', () => { if (loadTimer) loadWhenStill(); }, { passive: true });
+
+  function load() {
+    if (frame || !(wanted && onScreen)) return;
+    const small = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    frame = document.createElement('iframe');
+    frame.className = 'slab-frame';
+    frame.title = `${name} live preview`;
+    frame.tabIndex = -1;
+    frame.setAttribute('aria-hidden', 'true');
+    frame.src = `${slab.dataset.live}?quality=${small ? 'low' : 'high'}`;
+    slab.prepend(frame);
+  }
+
+  function sync() {
+    const run = wanted && onScreen && !document.hidden;
+    toggle.dataset.playing = String(wanted);
+    label.textContent = `${wanted ? 'Pause' : 'Play'} the ${name} preview`;
+    slab.classList.toggle('is-paused', !run);
+    if (run) loadWhenStill();
+    if (ready) frame.contentWindow.postMessage({ player: run ? 'play' : 'pause' }, '*');
+  }
+
+  window.addEventListener('message', (e) => {
+    if (!frame || e.source !== frame.contentWindow || !e.data || e.data.player !== 'ready') return;
+    ready = true;
+    slab.classList.add('is-live');
+    sync();
+  });
+
+  toggle.addEventListener('click', () => {
+    wanted = !wanted;
+    sync();
+  });
+  document.addEventListener('visibilitychange', sync);
+  new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    sync();
+  }, { threshold: 0.35 }).observe(slab);
+
+  toggle.hidden = false;
+  sync();
+}
+
 document.querySelectorAll('[data-slab]').forEach((slab) => {
   if (canTilt) initSlabTilt(slab);
-  initSlabVideo(slab);
+  if (slab.dataset.live) initSlabLive(slab);
+  else initSlabVideo(slab);
 });

@@ -773,6 +773,77 @@ a:focus-visible .hover-frame::after {
 .slab-toggle[data-playing="false"] .hero-icon-pause,
 .slab-toggle[data-playing="true"] .hero-icon-play { display: none; }
 
+/* A live slab: the scene runs in an iframe that sits under the screen link, so the glass,
+   labels and click still belong to the link. The poster image fades out once the scene
+   has drawn its first frame (.is-live, set in app.js). */
+.slab-frame {
+  position: absolute;
+  top: var(--rim);
+  left: var(--rim);
+  width: calc(100% - 2 * var(--rim));
+  height: calc(100% - 2 * var(--rim));
+  border: 0;
+  border-radius: calc(var(--slab-radius) - var(--rim));
+  background: #0d0d0d;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-standard), transform 700ms var(--spring);
+}
+
+.slab.is-live .slab-frame { opacity: 1; }
+.slab.is-live .slab-screen { background: transparent; }
+.slab-screen img { transition: transform 700ms var(--spring), opacity 500ms var(--ease-standard); }
+.slab.is-live .slab-screen img { opacity: 0; }
+
+.slab:hover .slab-frame,
+.slab:has(.slab-screen:focus-visible) .slab-frame { transform: scale(1.035); }
+
+/* "Live" chip: says the window is the real thing, not a recording. */
+.slab-live {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(10, 10, 10, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 300ms var(--ease-standard);
+}
+
+.slab-live::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.slab.is-live .slab-live { opacity: 1; }
+.slab.is-live.is-paused .slab-live::before { background: rgba(243, 238, 221, 0.45); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .slab.is-live:not(.is-paused) .slab-live::before { animation: slab-live-beat 1s steps(2, jump-none) infinite; }
+}
+
+@keyframes slab-live-beat {
+  from { opacity: 1; }
+  to { opacity: 0.35; }
+}
+
 .project-copy h3 {
   font-size: 26px;
 }
@@ -1132,7 +1203,11 @@ a:focus-visible .hover-frame::after {
   .slab-screen img,
   .slab-screen video,
   .slab-label,
+  .slab-live,
+  .slab-frame,
   .slab-toggle { transition: none !important; }
+  .slab:hover .slab-frame,
+  .slab:has(.slab-screen:focus-visible) .slab-frame { transform: none; }
   .slab:hover,
   .slab:focus-within { --lift: 0px; }
   .slab:has(.slab-screen:active) { --press: 1; }

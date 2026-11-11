@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="cs-page">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elaborate Backgrounds — Eder Yepez Cuevas</title>
+<meta name="description" content="Elaborate Backgrounds: a browser editor by Eder Yepez Cuevas for making looping stop-motion wallpapers, designed so a deep stack of layers stays easy to read.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="assets/images/elaborate-backgrounds/reef-rave.webp">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/case-study.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<!-- Icon sprite: decorative, referenced via <use> -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="icon-github" viewBox="0 0 24 24">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.089-.744.084-.729.084-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.42-1.305.763-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+    </symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </symbol>
+    <symbol id="icon-email" viewBox="0 0 24 24">
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 18 16">
+      <path d="M10.5 1.5 17 8l-6.5 6.5M16.5 8H1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 16 18">
+      <path d="M1.5 10.5 8 17l6.5-6.5M8 16.5V1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="rail">
+  <a class="rail-logo" href="index.html" aria-label="Eder Yepez Cuevas, home">E</a>
+  <nav class="rail-nav" aria-label="Primary">
+    <a class="rail-link" href="index.html#about">About</a>
+    <a class="rail-link" href="assets/resume.pdf">Resume</a>
+  </nav>
+  <div class="rail-social">
+    <a class="rail-icon" href="https://linkedin.com/in/eder-yepez-cuevas-260156210" aria-label="LinkedIn">
+      <svg aria-hidden="true"><use href="#icon-linkedin"></use></svg>
+    </a>
+    <a class="rail-icon" href="mailto:ederyepe777@gmail.com" aria-label="Email">
+      <svg aria-hidden="true"><use href="#icon-email"></use></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main-content" tabindex="-1">
+
+  <!-- ===== Hero ===== -->
+  <section class="cs-hero" style="--hero-pos: 50% 35%">
+    <figure class="cs-hero-media">
+      <img src="assets/images/elaborate-backgrounds/reef-rave.webp" alt="" width="1920" height="1080" fetchpriority="high">
+    </figure>
+    <div class="cs-hero-text">
+      <div class="cs-hero-inner">
+        <p class="cs-hero-mark">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#D9A441"/><path d="M7 12.5 16 8l9 4.5-9 4.5z" fill="#2A1A08"/><path d="M7 16.5l9 4.5 9-4.5M7 20.5l9 4.5 9-4.5" fill="none" stroke="#2A1A08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Elaborate Backgrounds
+          <span class="cs-hero-mark-sep" aria-hidden="true"></span>
+          <span class="cs-hero-mark-sub">Creative tool, UX/UI</span>
+        </p>
+        <h1 class="cs-hero-title">A stop-motion wallpaper editor where depth is easy to read</h1>
+      </div>
+    </div>
+    <a class="cs-hero-arrow" href="#overview" aria-label="Skip to the overview">
+      <span class="cs-hero-arrow-icon"><svg aria-hidden="true"><use href="#icon-arrow-down"></use></svg></span>
+    </a>
+  </section>
+
+  <!-- ===== 01 Overview ===== -->
+  <section class="cs-section" id="overview">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">01</span>
+        <h2 class="cs-h2">Overview</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead"><strong>Elaborate Backgrounds is a browser editor for making your own looping stop-motion wallpapers.</strong> A scene is a stack of layers at different depths. Pieces come from a built-in store or are drawn and cut by hand, and a finished loop exports as a still, a video that loops exactly, or a live wallpaper file.</p>
+        <p>There are no photos and no image-generation models; every picture is drawn by code. It&rsquo;s a self-directed project and still a work in progress. Nobody but me has used it yet.</p>
+      </div>
+      <dl class="cs-meta">
+        <div data-reveal="rise">
+          <dt>My Role</dt>
+          <dd>Concept, creative direction, art direction and design</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Tools</dt>
+          <dd>HTML, CSS, JavaScript, WebGL2</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Timeline</dt>
+          <dd>October to November 2026</dd>
+        </div>
+      </dl>
+      <div class="cs-actions">
+        <a class="cs-button cs-button--solid" href="https://ederyc.github.io/Elaborate-Backgrounds/">Try the live demo <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+        <a class="cs-button" href="https://github.com/ederyc/Elaborate-Backgrounds">View the code on GitHub <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-band" data-reveal="fade">
+    <img src="assets/images/elaborate-backgrounds/editor.webp" alt="The editor in its dark Studio theme with the Beach day scene open: a girl building a sandcastle on a beach, with gulls, palms, umbrellas and a rubber duck. Numbered layers and a depth view are on the left, the girl&rsquo;s group is selected on the canvas, its settings are on the right, and a strip of 12 pose buttons sits under the timeline" width="1600" height="900" loading="lazy">
+  </div>
+
+  <!-- ===== 02 Where it started ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">02</span>
+        <h2 class="cs-h2">From a study to a tool</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">It started as a study: a real-time recreation of the feel of a looping stop-motion backdrop seen on a podcast set.</p>
+        <p>That backdrop was a handmade-looking fantasy garden with a waterfall, swaying flowers and a soft, warm, fuzzy filter. I don&rsquo;t know who made it. Working out how to recreate its feel turned into a recipe: flat layers at different depths, a clock that only ticks 12 times a second like stop-motion, a slight &ldquo;boil&rdquo; so edges shimmer as if each frame were handmade, and a stack of film-like effects on top.</p>
+        <p>Once the look was a recipe, it could be a tool. So I turned the study into an editor where anyone can build their own scene from the same ingredients, with every part of the look as switches and sliders.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Statement ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-wide" data-reveal="slide">
+        <span class="cs-statement-label">The question</span>
+        <p class="cs-statement-text">A scene can have dozens of layers at different depths. How do you keep track of <span class="cs-hl">what sits in front of what</span>?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 Depth ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">03</span>
+        <h2 class="cs-h2">Making depth readable at a glance</h2>
+      </div>
+      <div class="cs-body">
+        <p class="cs-lead" data-reveal="slide">The Beach day sample has 31 layers. In a plain list of names, depth is something you have to remember. I wanted it to be something you can see.</p>
+        <ul class="cs-checklist">
+          <li data-reveal="slide"><strong>Numbers.</strong> Every layer has a number sticker, and 1 is the front.</li>
+          <li data-reveal="slide"><strong>Depth colors.</strong> Layers are colored the way haze cools distant hills: blue-violet for far, through cyan and green, to yellow and coral for near. The same color shows up in five places, including the row&rsquo;s edge, its number and the layer chip on any piece you select.</li>
+          <li data-reveal="slide"><strong>A depth view.</strong> Above the list, every layer stands as a card on a floor, far on the left and the camera on the right.</li>
+        </ul>
+        <figure class="cs-figure cs-figure--inline" data-reveal="fade">
+          <img src="assets/images/elaborate-backgrounds/depth-view.webp" alt="The Layers panel up close. In the depth view, a row of tilted cards runs from far to near, and the card for the Shallows layer has turned to face the viewer, larger, with its name above it. Below, rows 1 to 4 each have a colored number sticker, a thumbnail, a piece count and badges" width="544" height="840" loading="lazy">
+          <figcaption>Pointing at the Shallows card turns it to face you.</figcaption>
+        </figure>
+      </div>
+
+      <div class="cs-body" data-reveal="slide">
+        <h3>The depth view magnifies like a dock</h3>
+        <p>With 31 cards in a panel 250 pixels wide, each one is a sliver. So pointing at the diagram magnifies it around the pointer: the nearest cards spread apart, the far ones fold together, and the card under the pointer turns from its angle to face you, larger, with its name and its pieces. Hovering a row in the list does the same for that layer, and clicking selects it.</p>
+        <p>To check that every layer could be reached, I had a script sweep the pointer across the diagram in 2 px steps. It reached all 31 Beach day layers, in depth order, without skipping one.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 Groups ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">04</span>
+        <h2 class="cs-h2">Objects share layers</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">The first version gave every object a layer of its own, and I didn&rsquo;t like it. In a drawing program, objects share layers.</p>
+        <p>So layers now hold groups. Click a grouped piece and the whole group is selected, ready to drag, scale or turn as one. Double-click to reach a single piece inside. Shift-click several pieces and press Ctrl+G to group them. Beach day went from 37 layers to 31, with the girl, her bucket and sandcastle, and the crab sharing the front layer.</p>
+        <p>Some things still need their own layer. Motion belongs to a layer, so anything that sways, drifts or flies across stays separate. When a merge can&rsquo;t happen, the editor says why instead of quietly refusing.</p>
+        <h3>The rest of the toolkit</h3>
+      </div>
+
+      <div class="cs-cols">
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">01</span>
+          <h3>Make your own pieces</h3>
+          <p>Draw with five shape tools or a pen, then pick a material: paper, felt, clay, foliage and more. A photo of a paper shape can become a cut-out with a handmade edge.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">02</span>
+          <h3>Animate pose by pose</h3>
+          <p>Give a layer 2 to 12 poses. Onion skin shows the previous pose faintly, and &ldquo;Copy previous pose&rdquo; starts a new one from the last.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">03</span>
+          <h3>Export a loop</h3>
+          <p>A PNG still, an MP4 rendered beat by beat so it loops exactly, or a live wallpaper: one self-contained HTML file that plays the scene full screen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 05 Craft table ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">05</span>
+        <h2 class="cs-h2">An animator&rsquo;s craft table</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">The interface borrows from the scenes it makes instead of from Photoshop or Illustrator.</p>
+        <p>The scenes are paper, felt and clay lit from the top left, so the interface is too. Panels are trays with a faint paper grain. Buttons are small raised chips that lift on hover and squish when pressed. The scene sits on a pasteboard with a dot grid, like a cutting mat. Motion is springy and quick, 200 to 400 ms, and all of it stops when reduced motion is turned on.</p>
+        <p>There are two themes: Studio, a warm dark plum, and Paper, a light cream. Each accent color has one meaning everywhere: sun yellow for selection and focus, coral for the main action, teal for &ldquo;on&rdquo;, lilac for animation, pink for your own things and sky blue for information.</p>
+        <figure class="cs-figure cs-figure--inline">
+          <img src="assets/images/elaborate-backgrounds/store.webp" alt="The store drawer: a search field, group chips for Shapes, Plants, Flowers, Beach, 3D, Sky, Your images and My pieces, and a grid of rendered pieces such as a paper card, a felt circle, a clay pebble and a cotton cloud" width="704" height="1080" loading="lazy">
+          <figcaption>The store. A click flies a piece into the view; dragging places it.</figcaption>
+        </figure>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="cs-band" data-reveal="fade">
+    <img src="assets/images/elaborate-backgrounds/paper.webp" alt="The editor in its light Paper theme, with the Look tab open on the right: five look presets drawn as small renders of the scene, a Stop motion card with the beat rate and boil, and a Color grade card with its sliders" width="1600" height="900" loading="lazy">
+  </div>
+
+  <!-- ===== 06 Scenes ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">06</span>
+        <h2 class="cs-h2">Scenes made in the editor</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">Each sample shows off a different part of the tool, and each one opens in the editor with every piece editable.</p>
+        <p><strong>Lilac Falls</strong>, on the landing page, is built the way stop-motion water is built: the falls are crinkled cellophane with cotton-wool foam, the pools are poured resin with clear ripple rings, and both are swapped frame by frame on twos. <strong>Beach day</strong> is made only of ordinary editor shapes. <strong>Reef Rave</strong>, at the top of this page, is an octopus party in an underwater cave, seen from inside the crowd, with out-of-focus partygoers right by the lens.</p>
+      </div>
+
+      <div class="cs-pair cs-wide">
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/elaborate-backgrounds/lilac-falls.webp" alt="Lilac Falls: a two-tier waterfall pours down a purple clay cliff into a pool that runs under a little wooden footbridge, with a wisteria tree, felt clouds and a paper moon in a pink sky" width="1600" height="900" loading="lazy">
+          <figcaption>Lilac Falls, one frame of the 6-second loop.</figcaption>
+        </figure>
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/elaborate-backgrounds/beach-day.webp" alt="Beach day: a girl in a sun hat scoops sand beside her sandcastle while waves roll in, with a rubber duck, a crab, a lifeguard tower, umbrellas and palms" width="1600" height="900" loading="lazy">
+          <figcaption>Beach day, one frame of the 6-second loop.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 07 Testing ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">07</span>
+        <h2 class="cs-h2">What the checks caught</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">Before building more, I wanted the editor checked properly. These are measurements from my own laptop, not claims about real-world use.</p>
+        <p>A set of 92 scripted checks drives a real browser: drawing, undo, 600 random clicks and keys three times over, saving, exporting, six screen sizes in both themes, accessibility scans and failure cases like blocked storage. The first run passed 62 of 77. After the fixes it passes 87 of 92, and all five failures are one open bug.</p>
+      </div>
+
+      <dl class="cs-stats">
+        <div class="cs-stat" data-reveal="rise">
+          <dt>Scripted checks passing, from 62 of 77 on the first run</dt>
+          <dd>87/92</dd>
+        </div>
+        <div class="cs-stat" data-reveal="rise">
+          <dt>Page tests passing in Edge</dt>
+          <dd>13/13</dd>
+        </div>
+        <div class="cs-stat" data-reveal="rise">
+          <dt>Typical frame time for Lilac Falls, editor canvas in a 1600 &times; 900 window</dt>
+          <dd>4.3 ms</dd>
+        </div>
+        <div class="cs-stat" data-reveal="rise">
+          <dt>Random actions with no errors</dt>
+          <dd>~1,800</dd>
+        </div>
+      </dl>
+
+      <div class="cs-cols">
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">01</span>
+          <h3>Work could be lost</h3>
+          <p>The browser kept only one autosave, and loading a scene counted as a change. Opening two samples, starting a new scene or opening a file could erase work with no warning.</p>
+          <p class="cs-change"><strong>What changed:</strong> every scene is now its own save, and the home page lists them under &ldquo;Pick up where you left off&rdquo;. The last second of work now survives closing the page too.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">02</span>
+          <h3>Do the loops really repeat?</h3>
+          <p>Rendering the first beat and the same beat one loop later gives identical pixels, a difference of exactly 0. In an exported MP4, the small differences left come from video compression.</p>
+          <p class="cs-change"><strong>What changed:</strong> nothing needed to. The check stays in the suite so it can&rsquo;t quietly break.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">03</span>
+          <h3>Buttons that are too small</h3>
+          <p>The buttons that expand a layer&rsquo;s pieces are 18 px wide, and WCAG 2.2 asks for 24 px. On Lilac Falls, 13 of them fall short. It&rsquo;s the only accessibility problem the scans found.</p>
+          <p class="cs-change"><strong>Still open:</strong> this is the one bug behind all five failing checks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 08 Not proven ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">08</span>
+        <h2 class="cs-h2">What this doesn&rsquo;t prove yet</h2>
+      </div>
+      <div class="cs-body">
+        <p class="cs-lead" data-reveal="slide">The checks show that it works, not that it&rsquo;s easy to learn. Firefox, Safari and wallpaper apps are untested, and no one else has used it. These are the questions I&rsquo;d take to a usability test first:</p>
+        <ol class="cs-numbered">
+          <li data-reveal="slide">Can someone new tell which layer is in front without reading the numbers?</li>
+          <li data-reveal="slide">Do people use the depth view to move between layers, or only the list?</li>
+          <li data-reveal="slide">Does it make sense that swaying and flying things need a layer of their own?</li>
+          <li data-reveal="slide">Does tapping Space to play, while holding Space and dragging pans, feel natural or get in the way?</li>
+        </ol>
+      </div>
+
+      <div class="cs-body" data-reveal="slide">
+        <h3>Credits</h3>
+        <p>Concept, creative direction, art direction and design by Eder Yepez Cuevas. The code was written with help from Claude, Anthropic&rsquo;s AI coding assistant.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Next project ===== -->
+  <section class="cs-next" aria-label="Next project">
+    <a class="cs-next-card" href="steadyhand.html" data-reveal="fade">
+      <img src="assets/images/steadyhand/night.webp" alt="" width="1440" height="900" loading="lazy">
+      <span>
+        <span class="cs-next-kicker">Next project</span>
+        <span class="cs-next-title">Steadyhand</span>
+        <span class="cs-next-sub">A shift handoff board that stays calm under pressure</span>
+      </span>
+      <span class="cs-next-arrow" aria-hidden="true"><svg><use href="#icon-arrow"></use></svg></span>
+    </a>
+  </section>
+
+</main>
+
+<footer class="cs-footer" id="contact">
+  <div class="cs-footer-inner">
+    <h2 class="cs-chat">Let&rsquo;s chat</h2>
+    <p class="cs-footer-text">I&rsquo;m looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
+    <div class="cs-actions">
+      <a class="cs-button cs-button--solid" href="mailto:ederyepe777@gmail.com">ederyepe777@gmail.com <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      <a class="cs-button" href="https://linkedin.com/in/eder-yepez-cuevas-260156210">LinkedIn</a>
+      <a class="cs-button" href="https://github.com/ederyc">GitHub</a>
+      <a class="cs-button" href="assets/resume.pdf">Resume</a>
+    </div>
+    <div class="cs-footer-fine">
+      <span>Eder Yepez Cuevas — Lodi, CA</span>
+      <a href="#main-content">Back to top &uarr;</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/project.js"></script>
+</body>
+</html>

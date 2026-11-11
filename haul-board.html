@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" class="cs-page">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haul Board — Eder Yepez Cuevas</title>
+<meta name="description" content="Haul Board: a concept dispatch board by Eder Yepez Cuevas that catches scheduling conflicts during the drag and offers specific fixes.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="assets/images/haul-board/hero.webp">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/case-study.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<!-- Icon sprite: decorative, referenced via <use> -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="icon-github" viewBox="0 0 24 24">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.089-.744.084-.729.084-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.42-1.305.763-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+    </symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </symbol>
+    <symbol id="icon-email" viewBox="0 0 24 24">
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 18 16">
+      <path d="M10.5 1.5 17 8l-6.5 6.5M16.5 8H1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 16 18">
+      <path d="M1.5 10.5 8 17l6.5-6.5M8 16.5V1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="rail">
+  <a class="rail-logo" href="index.html" aria-label="Eder Yepez Cuevas, home">E</a>
+  <nav class="rail-nav" aria-label="Primary">
+    <a class="rail-link" href="index.html#about">About</a>
+    <a class="rail-link" href="assets/resume.pdf">Resume</a>
+  </nav>
+  <div class="rail-social">
+    <a class="rail-icon" href="https://linkedin.com/in/eder-yepez-cuevas-260156210" aria-label="LinkedIn">
+      <svg aria-hidden="true"><use href="#icon-linkedin"></use></svg>
+    </a>
+    <a class="rail-icon" href="mailto:ederyepe777@gmail.com" aria-label="Email">
+      <svg aria-hidden="true"><use href="#icon-email"></use></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main-content" tabindex="-1">
+
+  <!-- ===== Hero ===== -->
+  <section class="cs-hero" style="--hero-pos: 50% 20%">
+    <figure class="cs-hero-media">
+      <img src="assets/images/haul-board/hero.webp" alt="" width="1600" height="1060" fetchpriority="high">
+    </figure>
+    <div class="cs-hero-text">
+      <div class="cs-hero-inner">
+        <p class="cs-hero-mark">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#7FC79A"/><path d="M5 10h12v11H5zM17 14h5l4 4v3h-9" fill="none" stroke="#0E2318" stroke-width="2.2" stroke-linejoin="round"/><circle cx="10" cy="22.5" r="2.2" fill="#7FC79A" stroke="#0E2318" stroke-width="2"/><circle cx="21.5" cy="22.5" r="2.2" fill="#7FC79A" stroke="#0E2318" stroke-width="2"/></svg>
+          Haul Board
+          <span class="cs-hero-mark-sep" aria-hidden="true"></span>
+          <span class="cs-hero-mark-sub">Interaction design concept</span>
+        </p>
+        <h1 class="cs-hero-title">A dispatch board that catches conflicts while you drag</h1>
+      </div>
+    </div>
+    <a class="cs-hero-arrow" href="#overview" aria-label="Skip to the overview">
+      <span class="cs-hero-arrow-icon"><svg aria-hidden="true"><use href="#icon-arrow-down"></use></svg></span>
+    </a>
+  </section>
+
+  <!-- ===== 01 Overview ===== -->
+  <section class="cs-section" id="overview">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">01</span>
+        <h2 class="cs-h2">Overview</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead"><strong>Haul Board is a one-day board for assigning harvest pickups to a small pool of drivers and trucks.</strong> I built it as an interaction design exercise around one problem: catching a scheduling conflict while you&rsquo;re still dragging, and offering a fix instead of an error. It&rsquo;s a self-directed concept. There was no client, no user research and no backend, and all 10 drivers and 22 hauls are invented.</p>
+      </div>
+      <dl class="cs-meta">
+        <div data-reveal="rise">
+          <dt>My Role</dt>
+          <dd>Concept, interaction and UI design</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Tools</dt>
+          <dd>HTML, CSS, JavaScript</dd>
+        </div>
+        <div data-reveal="rise">
+          <dt>Timeline</dt>
+          <dd>October 2026</dd>
+        </div>
+      </dl>
+      <div class="cs-actions">
+        <!-- Add a solid "Try the live demo" button here (https://ederyc.github.io/Dispatch-Board/) once GitHub Pages is on for the repo. -->
+        <a class="cs-button cs-button--solid" href="https://github.com/ederyc/Dispatch-Board">View the code on GitHub <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-band" data-reveal="fade">
+    <img src="assets/images/haul-board/board.webp" alt="Haul Board over an aerial farmland backdrop: a timeline from 05:00 to 18:00 with an Unassigned lane holding three hauls, then ten driver lanes. Each driver label has a row of capacity dots and a booked percentage. One haul, R-118, is hatched in red" width="1600" height="1060" loading="lazy">
+  </div>
+
+  <!-- ===== 02 The problem ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">02</span>
+        <h2 class="cs-h2">The problem</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">During harvest, a dispatcher matches pickups at ranch blocks with drivers and trucks and gets each load to a cooler. Every haul comes with rules.</p>
+        <p>It has to fit inside the driver&rsquo;s shift, and it can&rsquo;t overlap another haul. Some loads need particular equipment: a refrigerated trailer for strawberries, or a forklift where a block has no loading dock. The plan also changes during the day. A second pick comes in early, or a field runs late, so the board gets rearranged again and again, and any move can break a rule somewhere else.</p>
+        <p>A board that only checks when you save tells you about a problem after you&rsquo;ve already made it. I wanted the board to say so while the haul is still in your hand.</p>
+        <p>I haven&rsquo;t worked as a dispatcher and didn&rsquo;t interview one. The rules are simplified to the shape of the problem, and the ranches, coolers and people are made up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Statement ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-wide" data-reveal="slide">
+        <span class="cs-statement-label">The question</span>
+        <p class="cs-statement-text">What if the board showed a conflict <span class="cs-hl">before you let go</span>, and offered a <span class="cs-hl">specific fix</span> instead of an error?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 During the drag ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">03</span>
+        <h2 class="cs-h2">Checking during the drag</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">The checks run at every step of the drag, not after a save.</p>
+        <p>As you drag, the lane under the pointer lights up and a snap preview shows exactly where the haul will land, in 15-minute steps. If that spot breaks a rule, the preview and the lifted haul both switch to conflict styling, with the reason written on the haul.</p>
+      </div>
+
+      <figure class="cs-figure cs-wide" data-reveal="fade">
+        <img src="assets/images/haul-board/drag.webp" alt="Mid-drag: R-121 Granite Bench lifted over Ana Reyes&rsquo; lane at 10:00. It&rsquo;s outlined in red and hatched, with a warning icon and the words Overlaps R-102. Its original spot in Unassigned is faded" width="1020" height="300" loading="lazy">
+        <figcaption>Dragging R-121 onto Ana&rsquo;s 10:00 slot. Before the drop, the haul already says it overlaps R-102.</figcaption>
+      </figure>
+
+      <div class="cs-body" data-reveal="slide">
+        <h3>A warning, not a wall</h3>
+        <p>Letting go is still allowed. A dispatcher may know something the board doesn&rsquo;t. Dropping into a conflict opens a small panel beside the haul with up to two fixes, ranked by how little they disturb the rest of the board.</p>
+      </div>
+
+      <div class="cs-cols">
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">01</span>
+          <h3>Swap</h3>
+          <p>If the haul overlaps exactly one other haul, the two trade places. The other haul keeps its start time.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">02</span>
+          <h3>Bump</h3>
+          <p>Move the haul to the next open slot later in the same driver&rsquo;s day, or the nearest earlier one if there isn&rsquo;t one.</p>
+        </div>
+        <div class="cs-col" data-reveal="rise">
+          <span class="cs-col-kicker">03</span>
+          <h3>Hand it off</h3>
+          <p>Give the haul to another driver who is on shift, free for the whole window and has the right truck.</p>
+        </div>
+      </div>
+
+      <div class="cs-body" data-reveal="slide">
+        <p>If none of those works, the panel says so rather than offering something that doesn&rsquo;t fit. You can also keep the conflict, and the haul stays flagged on the board until it&rsquo;s fixed.</p>
+      </div>
+
+      <div class="cs-pair cs-wide">
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/haul-board/swap.webp" alt="After the drop, R-102 and R-121 are both flagged as overlapping. A panel below them reads Conflict R-121, Overlaps R-102 (10:00 to 13:00), with one option: Swap, send R-102 to Unassigned, R-102 keeps its 10:00 start. Keep with conflict and Cancel move sit underneath" width="600" height="330" loading="lazy">
+          <figcaption>After the drop: one swap offered, with &ldquo;Keep with conflict&rdquo; and &ldquo;Cancel move&rdquo; beside it.</figcaption>
+        </figure>
+        <figure class="cs-figure" data-reveal="fade">
+          <img src="assets/images/haul-board/fixes.webp" alt="A panel over R-118 Copper Ridge reads Conflict R-118, Outside Rosa&rsquo;s shift (11:00 to 19:00), with one option: Bump to 11:00, next open slot in Rosa&rsquo;s day" width="600" height="330" loading="lazy">
+          <figcaption>&ldquo;Show fixes&rdquo; on a haul that starts before its driver&rsquo;s shift.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 Never color alone ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">04</span>
+        <h2 class="cs-h2">Conflicts never rely on color alone</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">There are three kinds of conflict: an overlap, a haul outside the driver&rsquo;s shift, and a truck missing the equipment a load needs.</p>
+        <p>Each one is shown five ways at once: red, a diagonal hatch, a warning icon, an icon for its type (two overlapping squares, a clock or a truck) and a short label in words. Someone who can&rsquo;t tell red from green still gets the full message. Each haul&rsquo;s accessible name includes its conflicts in words, so a screen reader hears them too.</p>
+      </div>
+
+      <figure class="cs-figure cs-wide" data-reveal="fade">
+        <img src="assets/images/haul-board/conflict-strip.webp" alt="Two driver lanes up close. Owen Pryce, 41 percent booked, with a row of grey and green dots. Rosa Delgado, 56 percent booked, whose first three dots are red. Her haul R-118 Copper Ridge is hatched in red with a warning icon, a clock icon and the words Outside shift" width="1920" height="292" loading="lazy">
+        <figcaption>R-118 starts an hour before Rosa&rsquo;s shift. Her first capacity dots turn red, and the haul says why in words.</figcaption>
+      </figure>
+
+      <div class="cs-body" data-reveal="slide">
+        <h3>Capacity at a glance</h3>
+        <p>Each driver&rsquo;s label carries a strip of dots, one for every half hour of their shift: grey for free, green for booked, red for booked with a conflict. Beside it is the share of the shift that&rsquo;s booked. You can see who has room before you pick anything up.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-band" data-reveal="fade">
+    <img src="assets/images/haul-board/details.webp" alt="R-118 selected, with a details card open on the right. A dashed line runs from the haul on the board to the card. The card shows the load weight, a conflict box with a Show fixes button, the time window, stops, Rosa&rsquo;s whole day as a bar with this haul marked in red, the stop list and the dispatch note" width="1600" height="1060" loading="lazy">
+  </div>
+
+  <!-- ===== 05 Details card ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">05</span>
+        <h2 class="cs-h2">The details card stays tied to the board</h2>
+      </div>
+      <div class="cs-body" data-reveal="slide">
+        <p class="cs-lead">Clicking a haul opens its details in a card at the side, and a dashed lead line runs from the haul to the card.</p>
+        <p>A side panel can leave you guessing which item it belongs to, especially after the board scrolls. The line keeps that answer on screen, and it follows the haul as the board and the card scroll. The card also shows the driver&rsquo;s whole day as a bar with this haul marked, so you can see where it sits in the shift, along with its stops and the dispatch note.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 06 Keyboard ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">06</span>
+        <h2 class="cs-h2">The same move, from the keyboard</h2>
+      </div>
+      <div class="cs-body">
+        <p class="cs-lead" data-reveal="slide">Drag-and-drop has a full keyboard alternative. It isn&rsquo;t a lesser path: it uses the same preview and the same conflict checks as the mouse.</p>
+        <ul class="cs-checklist">
+          <li data-reveal="slide">Tab to a haul and press Space to pick it up. Left and right move it 15 minutes, or an hour with Shift. Up and down change the driver. Space or Enter drops it, and Escape puts it back.</li>
+          <li data-reveal="slide">A screen reader hears each step: what was picked up, where it would land, and any conflict there.</li>
+          <li data-reveal="slide">Ctrl+Z undoes the last three actions. A move and the fix that followed it count as one action, so one undo reverts both.</li>
+          <li data-reveal="slide">Motion stays at 200 ms or less: a 120 ms lift, a 140 ms snap and a 200 ms settle. With reduced motion turned on, it all stops.</li>
+        </ul>
+      </div>
+
+      <figure class="cs-figure cs-wide" data-reveal="fade">
+        <img src="assets/images/haul-board/keyboard.webp" alt="R-120 Meadowlark Ranch picked up from the keyboard and moved down to Owen Pryce&rsquo;s lane at 11:00. Owen&rsquo;s lane is highlighted green, and an empty outline marks where R-120 came from in Unassigned" width="1600" height="1060" loading="lazy">
+        <figcaption>R-120 picked up with Space and moved to Owen&rsquo;s lane with the arrow keys. The outline marks where it came from.</figcaption>
+      </figure>
+
+      <div class="cs-body" data-reveal="slide">
+        <h3>A field-ops look</h3>
+        <p>Frosted-glass panels sit over an aerial farmland backdrop that&rsquo;s drawn in code and seeded, so it&rsquo;s the same on every visit. Every number is set in a mono font so times line up down the board. The glass is only used on large panels that don&rsquo;t move, which keeps dragging smooth.</p>
+        <figure class="cs-figure cs-figure--inline">
+          <img src="assets/images/haul-board/shortcuts.webp" alt="The Shortcuts dialog, listing mouse actions and keyboard keys: Tab, Space, the arrow keys, Escape, Enter and Ctrl Z" width="440" height="388" loading="lazy">
+          <figcaption>Every shortcut in one dialog, opened with ?.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 07 Next tests ===== -->
+  <section class="cs-section">
+    <div class="cs-grid">
+      <div class="cs-head">
+        <span class="cs-index">07</span>
+        <h2 class="cs-h2">What I&rsquo;d test with real people</h2>
+      </div>
+      <div class="cs-body">
+        <p class="cs-lead" data-reveal="slide">Nobody but me has used this, and these are the questions I&rsquo;d want answered first:</p>
+        <ol class="cs-numbered">
+          <li data-reveal="slide">Do dispatchers trust a ranked fix, or do they want to see every option?</li>
+          <li data-reveal="slide">Does &ldquo;Keep with conflict&rdquo; get used so often that the flags stop meaning anything?</li>
+          <li data-reveal="slide">Are three steps of undo enough on a busy morning?</li>
+          <li data-reveal="slide">The fixes only know the hard rules. R-118&rsquo;s note says the buyer wants it at the cooler before 11:00, but the board&rsquo;s fix for it is a later start. Should notes like that become rules the board can check?</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Next project ===== -->
+  <section class="cs-next" aria-label="Next project">
+    <a class="cs-next-card" href="magetender.html" data-reveal="fade">
+      <img src="assets/images/magetender/hero.webp" alt="" width="1920" height="1080" loading="lazy">
+      <span>
+        <span class="cs-next-kicker">Next project</span>
+        <span class="cs-next-title">Magetender</span>
+        <span class="cs-next-sub">Mix the right drink, or defend the bar</span>
+      </span>
+      <span class="cs-next-arrow" aria-hidden="true"><svg><use href="#icon-arrow"></use></svg></span>
+    </a>
+  </section>
+
+</main>
+
+<footer class="cs-footer" id="contact">
+  <div class="cs-footer-inner">
+    <h2 class="cs-chat">Let&rsquo;s chat</h2>
+    <p class="cs-footer-text">I&rsquo;m looking for roles in UX design, game development, or software engineering, wherever systems and people meet.</p>
+    <div class="cs-actions">
+      <a class="cs-button cs-button--solid" href="mailto:ederyepe777@gmail.com">ederyepe777@gmail.com <svg aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+      <a class="cs-button" href="https://linkedin.com/in/eder-yepez-cuevas-260156210">LinkedIn</a>
+      <a class="cs-button" href="https://github.com/ederyc">GitHub</a>
+      <a class="cs-button" href="assets/resume.pdf">Resume</a>
+    </div>
+    <div class="cs-footer-fine">
+      <span>Eder Yepez Cuevas — Lodi, CA</span>
+      <a href="#main-content">Back to top &uarr;</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/project.js"></script>
+</body>
+</html>
