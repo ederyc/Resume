@@ -78,6 +78,17 @@ function initHeroScene(hero) {
   const label = toggle.querySelector('.visually-hidden');
   const saveData = Boolean(navigator.connection && navigator.connection.saveData);
 
+  // Portrait screens get the tall cut of the scene. The inline script in index.html already
+  // set the matching poster; this keeps the poster and the video in step when the screen turns.
+  const tallQuery = hero.dataset.tallMedia ? window.matchMedia(hero.dataset.tallMedia) : null;
+  const cut = () => {
+    const tall = Boolean(tallQuery && tallQuery.matches);
+    const d = hero.dataset;
+    return tall
+      ? { poster: d.tallPoster, webm: d.tallWebm, mp4: d.tallMp4 }
+      : { poster: d.poster, webm: d.webm, mp4: d.mp4 };
+  };
+
   let wanted = !prefersReducedMotion && !saveData;
   let onScreen = true;
   let loaded = false;
@@ -86,16 +97,31 @@ function initHeroScene(hero) {
   function load() {
     if (loaded) return;
     loaded = true;
+    const files = cut();
     const webm = document.createElement('source');
-    webm.src = hero.dataset.webm;
+    webm.src = files.webm;
     webm.type = 'video/webm; codecs="av01.0.08M.08"';
     const mp4 = document.createElement('source');
-    mp4.src = hero.dataset.mp4;
+    mp4.src = files.mp4;
     mp4.type = 'video/mp4';
     // If neither file can play, the poster stays and there's nothing to control.
     mp4.addEventListener('error', () => { toggle.hidden = true; });
     video.append(webm, mp4);
     video.load();
+  }
+
+  if (tallQuery) {
+    tallQuery.addEventListener('change', () => {
+      video.poster = cut().poster;
+      if (!loaded) return;
+      // Already playing the other cut: drop it and load this one the same way.
+      video.pause();
+      video.replaceChildren();
+      video.removeAttribute('src');
+      loaded = false;
+      toggle.hidden = false;
+      sync();
+    });
   }
 
   function sync() {
@@ -336,9 +362,15 @@ function initPaperSheets() {
     return { fibers: poly(top), sheet: poly(rim) };
   }
 
+  // The first sheet is the one under the hero: the bio and shelf, laid over the bottom of the
+  // scene so the hero ends in a torn edge instead of a fade. It's the page's own shade, so the
+  // sections after it keep their light/base order and their edges.
+  const first = document.querySelector('.theme-paper .hero + .intro-hero');
+  const all = first ? [[first, 'sheet-base', 4243], ...[...sheets].map((s, n) => [s, null, n])] : [...sheets].map((s, n) => [s, null, n]);
+
   const tears = [];
-  sheets.forEach((sheet, n) => {
-    sheet.classList.add('has-tear', sheet.classList.contains('site-footer') ? 'sheet-kraft' : n % 2 ? 'sheet-base' : 'sheet-light');
+  all.forEach(([sheet, shade, n]) => {
+    sheet.classList.add('has-tear', shade || (sheet.classList.contains('site-footer') ? 'sheet-kraft' : n % 2 ? 'sheet-base' : 'sheet-light'));
     const edge = document.createElement('span');
     edge.className = 'tear';
     edge.setAttribute('aria-hidden', 'true');

@@ -10,7 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='19' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
-<link rel="preload" as="image" href="assets/hero/lilac-falls.webp" type="image/webp" fetchpriority="high">
+<!-- The hero's poster: the wide scene, or the tall one on portrait screens (same query as data-tall-media below). -->
+<link rel="preload" as="image" href="assets/hero/desk.webp" type="image/webp" fetchpriority="high" media="(min-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="assets/hero/desk-tall.webp" type="image/webp" fetchpriority="high" media="not all and (min-aspect-ratio: 4/5)">
 </head>
 <body>
 
@@ -117,8 +119,20 @@
 <main id="main-content" tabindex="-1">
 
   <section class="intro" id="top">
-    <div class="hero" data-hero data-webm="assets/hero/lilac-falls.webm" data-mp4="assets/hero/lilac-falls.mp4">
-      <video class="hero-scene" poster="assets/hero/lilac-falls.webp" width="1600" height="900" muted loop playsinline preload="none" aria-hidden="true"></video>
+    <!-- Two cuts of the same scene: wide (1600x900) and tall for portrait screens (720x1560).
+         The poster is set by the script just below, before the first paint, so a phone never
+         downloads the wide one. js/app.js picks the matching video and swaps on rotation. -->
+    <div class="hero" data-hero
+         data-poster="assets/hero/desk.webp" data-webm="assets/hero/desk.webm" data-mp4="assets/hero/desk.mp4"
+         data-tall-media="not all and (min-aspect-ratio: 4/5)"
+         data-tall-poster="assets/hero/desk-tall.webp" data-tall-webm="assets/hero/desk-tall.webm" data-tall-mp4="assets/hero/desk-tall.mp4">
+      <video class="hero-scene" width="1600" height="900" muted loop playsinline preload="none" aria-hidden="true"></video>
+      <script>
+        (function (hero) {
+          var tall = matchMedia(hero.dataset.tallMedia).matches;
+          hero.querySelector('video').poster = tall ? hero.dataset.tallPoster : hero.dataset.poster;
+        })(document.currentScript.parentElement);
+      </script>
 
       <div class="hero-content">
         <h1 class="intro-headline">
@@ -137,11 +151,11 @@
           <svg class="hero-icon hero-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5l11 6.5-11 6.5z"/></svg>
           <span class="visually-hidden">Play background animation</span>
         </button>
-        <p class="hero-credit">Scene: Lilac Falls, from my project Elaborate Backgrounds</p>
       </div>
     </div>
 
     <div class="intro-hero" id="about">
+      <p class="hero-credit">Scene: Desk by the Window, from my project Elaborate Backgrounds</p>
       <p class="intro-bio intro-anim" style="animation-delay: 320ms;">I'm Eder, a game developer and designer based in Lodi, California, with a background in full-stack engineering, UX design, and game systems. I start every project by asking who's going to use it and what they actually need, then work backward from there, through wireframes, prototypes, and repeated rounds of testing.</p>
 
       <!-- The sections shelf: each tag is the link; the 3D objects standing on the plank are

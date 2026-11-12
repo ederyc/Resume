@@ -78,11 +78,6 @@
   --plum: #A56A82;
 }
 
-/* The scene's foreground fades into the paper instead of into black. */
-.theme-paper .hero::after {
-  background: linear-gradient(to bottom, rgba(243, 235, 220, 0), rgba(243, 235, 220, 0.82) 62%, var(--bg));
-}
-
 /* Paper sheets: every section below the intro is a sheet laid over the one before, with
    a torn top edge (made in js/app.js, which adds .has-tear and the sheet's shade). The
    sheet's color reaches the window's edges through border-image, which paints outside
@@ -293,7 +288,9 @@ a:focus-visible .hover-frame::after {
 }
 
 /* The scene fills the first screen, short enough that the bio below it starts
-   to show. The poster is the loop's first frame, so the video starts without a jump. */
+   to show. The poster is the loop's first frame, so the video starts without a jump.
+   Its bottom is covered by the torn top edge of the sheet below (.intro-hero), so the
+   scene reads as a picture with the page laid over it. */
 .hero {
   --hero-ink: #2A1C33;
   position: relative;
@@ -313,20 +310,9 @@ a:focus-visible .hover-frame::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 31% 50%;
-}
-
-/* The scene's foreground sinks into the page, so the hero has no hard bottom edge. */
-.hero::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  height: 34%;
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.72) 62%, var(--bg));
-  pointer-events: none;
+  /* The tall cut (portrait screens) crops from the bottom only, so the laptop with the
+     pixel kid lands below the headline, photo and role line. */
+  object-position: 50% 0%;
 }
 
 .hero-content {
@@ -337,7 +323,13 @@ a:focus-visible .hover-frame::after {
   padding: var(--space-6) var(--pad-x) var(--space-4);
   text-align: center;
   color: var(--hero-ink);
-  text-shadow: 0 0 18px rgba(255, 249, 238, 0.8);
+  /* Portrait screens: the headline crosses the tall cut's sky and green window frame,
+     where the frame alone gives under 3:1. A close cream halo keeps every letter's edge
+     on cream. The wall layout (landscape) turns this off: its wall is 13:1 without help. */
+  text-shadow:
+    0 0 2px rgba(255, 249, 238, 0.95),
+    0 0 6px rgba(255, 249, 238, 0.9),
+    0 0 18px rgba(255, 249, 238, 0.75);
 }
 
 .hero-content .intro-greeting { color: var(--hero-ink); }
@@ -360,7 +352,8 @@ a:focus-visible .hover-frame::after {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 var(--pad-x) var(--space-3);
+  margin-top: auto;
+  padding: 0 var(--pad-x) calc(30px + var(--space-2)); /* clears the torn edge laid over the bottom */
 }
 
 .hero-toggle {
@@ -395,10 +388,13 @@ a:focus-visible .hover-frame::after {
 .hero-toggle[data-playing="false"] .hero-icon-pause,
 .hero-toggle[data-playing="true"] .hero-icon-play { display: none; }
 
+/* The scene's caption, on the paper just under the torn edge, like a caption under a picture. */
 .hero-credit {
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+  text-align: right;
   font-family: var(--mono);
   font-size: 13px;
-  color: var(--ink);
+  color: var(--ink-faint);
 }
 
 .visually-hidden {
@@ -1777,6 +1773,64 @@ main > .category:focus { outline: none; }
   .intro-photo { height: clamp(130px, 25svh, 210px); }
   .hero-role { font-size: 17px; }
   .hero-credit { font-size: 12px; }
+}
+
+/* Portrait tablets: the tall cut crops from the top too, so the laptop isn't cut off. */
+@media (min-width: 641px) {
+  .hero-scene { object-position: 50% 30%; }
+}
+
+/* Hero on the wall: on landscape screens the scene is the wide cut, and its upper left
+   (x 4-45%, y 8-60% of the frame) is a plain, still, sunlit wall made for this. The
+   photo and headline sit there with no glow or backing, photo first and the words beside
+   it. The frame only ever crops from the right and the bottom, so percentages of the
+   hero's width stay on the wall. The heading is a subgrid so the role line can share its
+   text column without being part of the heading. Portrait screens get the tall cut and
+   the centered layout, over the sky. This comes after the phone rules on purpose:
+   a phone held sideways gets the wall layout too. */
+@media (min-aspect-ratio: 4/5) {
+  /* Crop only from the right and mostly from the bottom, so the wall stays put. */
+  .hero-scene { object-position: 0% 30%; }
+
+  .hero-content {
+    flex: none;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto 1fr;
+    column-gap: clamp(20px, 2.2vw, 40px);
+    align-content: start;
+    width: 41%;
+    max-width: none;
+    margin: 0 0 0 4%;
+    padding: clamp(24px, 13vh, 150px) 0 var(--space-4);
+    text-align: left;
+    text-shadow: none;
+  }
+
+  .intro-headline {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    justify-content: normal;
+    gap: normal; /* a subgrid's normal gap is its parent's */
+  }
+
+  .intro-photo-wrap { grid-column: 1; grid-row: 1 / -1; align-self: center; }
+  .intro-headline > .intro-greeting:first-child { grid-column: 2; grid-row: 2; justify-self: start; }
+  .intro-headline > .intro-greeting:last-child { grid-column: 2; grid-row: 3; justify-self: start; }
+  .intro-greeting { grid-row: auto; white-space: nowrap; }
+  .intro-photo { height: clamp(150px, min(34svh, 18vw), 340px); }
+
+  .hero-role {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: start;
+    width: auto;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    background: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
