@@ -1,59 +1,190 @@
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function initSpinIcon(el) {
-  if (prefersReducedMotion) return;
+// The section icons float in soap bubbles (.bubble in index.html, styled in style.css).
+// The icon drifts on a slow wander, lags behind when the page scrolls, bounces off the
+// bubble's wall and dents it, and gets knocked away from a click. Each bubble pops its
+// icon in (small, then a springy bounce to size) the first time it's seen, and again when
+// a shelf object lands in it: js/shelf.js sends 'bubble:incoming' at launch and
+// 'bubble:catch' on landing. With reduced motion the icon just sits in the middle.
+function initBubble(el) {
+  const back = el.querySelector('.bubble-back');
+  const shell = el.querySelector('.bubble-shell');
+  const icon = el.querySelector('.bubble-icon');
+  if (!back || !shell || !icon || prefersReducedMotion) return;
 
-  const scrollSensitivity = .039 // deg of spin velocity added per px of scroll
-  const maxVelocity = 20;          // deg/frame cap, keeps top speed from feeling glitchy
-  const friction = .99;         // per-frame velocity decay — the "momentum" tail
-  const restThreshold = 0.02;     // velocity below this stops the animation loop
+  const ph = Math.random() * 100; // each bubble wanders its own way
+  // icon: position/velocity (px from center), tilt (deg), scale
+  const P = { x: 0, y: 0, vx: 0, vy: 0, a: 0, va: 0, s: 0, vs: 0, sTo: 1 };
+  // shell: stretch as a traceless 2x2 (a, b) so a squash can point any way, plus overall size
+  const B = { a: 0, b: 0, va: 0, vb: 0, s: 1, vs: 0 };
+  const pointer = { x: 0, y: 0, on: false };
+  let R = 0, r = 0;
+  let inView = false, raf = null, last = 0, popped = false, held = false;
 
-  let rotation = 0;
-  let velocity = 0;
-  let lastY = window.scrollY;
-  let inView = false;
-  let rafId = null;
+  const measure = () => {
+    R = el.offsetWidth / 2;
+    r = icon.offsetWidth * 0.42; // the icon's collision radius
+  };
+  measure();
+  new ResizeObserver(measure).observe(el);
 
-  const io = new IntersectionObserver(
-    ([entry]) => {
-      inView = entry.isIntersecting;
-      if (inView) startLoop();
-    },
-    { threshold: 0 }
-  );
-  io.observe(el);
+  // stretch the bubble along (nx, ny); a negative amount squashes it along that line
+  const stretch = (nx, ny, v) => {
+    B.va += v * (nx * nx - ny * ny);
+    B.vb += v * 2 * nx * ny;
+  };
 
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    const delta = y - lastY;
-    lastY = y;
-    // a shelf object is flying down to its ring (js/shelf.js); the ring waits to catch it
-    if (document.documentElement.classList.contains('is-shelf-flying')) return;
-    if (inView && delta !== 0) {
-      velocity = Math.max(-maxVelocity, Math.min(maxVelocity, velocity + delta * scrollSensitivity));
-      startLoop();
+  function pop(from) {
+    P.s = from;
+    P.vs = 0;
+    P.sTo = 1;
+    B.vs -= 1.1;
+    wake();
+  }
+
+  function step(dt, t) {
+    // drift toward a slowly wandering point, like something suspended in water
+    const w = (R - r) * 0.3;
+    const tx = (Math.sin(t * 0.53 + ph) + Math.sin(t * 0.31 + ph * 1.7) * 0.6) * w;
+    const ty = (Math.cos(t * 0.47 + ph * 0.8) + Math.sin(t * 0.23 + ph * 2.3) * 0.6) * w;
+    let fx = (tx - P.x) * 6 - P.vx * 1.6;
+    let fy = (ty - P.y) * 6 - P.vy * 1.6;
+
+    // shy of the cursor
+    if (pointer.on) {
+      const dx = P.x - pointer.x, dy = P.y - pointer.y;
+      const d = Math.hypot(dx, dy) || 1, reach = r * 2.2;
+      if (d < reach) {
+        const k = (1 - d / reach) * 1400;
+        fx += (dx / d) * k;
+        fy += (dy / d) * k;
+      }
     }
+
+    P.vx += fx * dt;
+    P.vy += fy * dt;
+    P.x += P.vx * dt;
+    P.y += P.vy * dt;
+
+    // the wall: bounce back in and bulge the bubble where it hit
+    const lim = Math.max(1, R - r - 3);
+    const d = Math.hypot(P.x, P.y);
+    if (d > lim) {
+      const nx = P.x / d, ny = P.y / d;
+      P.x = nx * lim;
+      P.y = ny * lim;
+      const vn = P.vx * nx + P.vy * ny;
+      if (vn > 0) {
+        P.vx -= 1.55 * vn * nx;
+        P.vy -= 1.55 * vn * ny;
+        P.va += (P.vy * nx - P.vx * ny) * 0.6; // glancing hits spin it
+        stretch(nx, ny, Math.min(vn / R, 6) * 0.45);
+        B.vs += Math.min(vn / R, 6) * 0.08;
+      }
+    }
+
+    // tilt leans into the motion, with a little sway
+    const tilt = Math.max(-28, Math.min(28, P.vx * 0.05)) + Math.sin(t * 0.9 + ph) * 5;
+    P.va += ((tilt - P.a) * 30 - P.va * 4.5) * dt;
+    P.a += P.va * dt;
+
+    // springs: the icon's pop overshoots, the shell jiggles
+    P.vs += ((P.sTo - P.s) * 520 - P.vs * 14) * dt;
+    P.s += P.vs * dt;
+    B.va += (-B.a * 380 - B.va * 8.5) * dt;
+    B.vb += (-B.b * 380 - B.vb * 8.5) * dt;
+    B.vs += ((1 - B.s) * 420 - B.vs * 10) * dt;
+    B.a = Math.max(-0.3, Math.min(0.3, B.a + B.va * dt));
+    B.b = Math.max(-0.3, Math.min(0.3, B.b + B.vb * dt));
+    B.s += B.vs * dt;
+
+    const bob = Math.sin(t * 1.15 + ph) * 3;
+    const m = `matrix(${B.s * (1 + B.a)}, ${B.s * B.b}, ${B.s * B.b}, ${B.s * (1 - B.a)}, 0, ${bob})`;
+    back.style.transform = m;
+    shell.style.transform = m;
+    icon.style.transform = `translate(${P.x}px, ${P.y + bob}px) rotate(${P.a}deg) scale(${Math.max(0, P.s)})`;
+    el.style.setProperty('--bubble-shadow', (1 - bob * 0.03).toFixed(3));
+  }
+
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    // two half steps keep fast hits from slipping through the wall
+    step(dt / 2, now / 1000);
+    step(dt / 2, now / 1000);
+    raf = inView || held ? requestAnimationFrame(frame) : null;
+  }
+
+  function wake() {
+    if (raf !== null) return;
+    last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  icon.style.transform = 'scale(0)'; // waits to pop in
+
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    if (inView && !popped && !held && entry.intersectionRatio >= 0.6) {
+      popped = true;
+      setTimeout(() => pop(0), 120);
+    }
+    if (inView) wake();
+  }, { threshold: [0, 0.6] }).observe(el);
+
+  // poke: the bubble dents where it was touched and boings, the icon gets knocked away
+  el.addEventListener('pointerdown', (e) => {
+    const rect = el.getBoundingClientRect();
+    const qx = e.clientX - rect.left - R, qy = e.clientY - rect.top - R;
+    let dx = P.x - qx, dy = P.y - qy, d = Math.hypot(dx, dy);
+    if (d < 1) { const a = Math.random() * Math.PI * 2; dx = Math.cos(a); dy = Math.sin(a); d = 1; }
+    const kick = 380 + 320 * Math.max(0, 1 - d / (R * 1.2));
+    P.vx += (dx / d) * kick;
+    P.vy += (dy / d) * kick;
+    P.va += (Math.random() < 0.5 ? -1 : 1) * (260 + Math.random() * 200);
+    P.vs -= 5;
+    const qd = Math.hypot(qx, qy);
+    if (qd > R * 0.2) stretch(qx / qd, qy / qd, -3.2);
+    B.vs -= 1.8;
+    if (!popped) { popped = true; P.sTo = 1; }
+    wake();
+  });
+
+  el.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const rect = el.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left - R;
+    pointer.y = e.clientY - rect.top - R;
+    pointer.on = true;
+  });
+  el.addEventListener('pointerleave', () => { pointer.on = false; });
+
+  // scrolling carries the bubble; the icon lags behind it
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const delta = window.scrollY - lastY;
+    lastY = window.scrollY;
+    if (!inView || held || document.documentElement.classList.contains('is-shelf-flying')) return;
+    P.vy += Math.max(-140, Math.min(140, delta * 1.4));
+    wake();
   }, { passive: true });
 
-  function startLoop() {
-    if (rafId !== null) return;
-    rafId = requestAnimationFrame(tick);
-  }
-
-  function tick() {
-    rotation += velocity;
-    velocity *= friction;
-    el.style.transform = `rotateY(${rotation}deg)`;
-    if (Math.abs(velocity) > restThreshold) {
-      rafId = requestAnimationFrame(tick);
-    } else {
-      velocity = 0;
-      rafId = null;
-    }
-  }
+  // a shelf object is on its way: the icon ducks out, then the new one pops in on landing
+  el.addEventListener('bubble:incoming', () => {
+    held = true;
+    popped = true;
+    P.sTo = 0;
+    wake();
+  });
+  el.addEventListener('bubble:catch', () => {
+    held = false;
+    P.x = 0; P.y = 0; P.vx = 0; P.vy = 260; P.va = 0;
+    stretch(0, 1, -3); // squashed flat by the landing
+    pop(0.3);
+  });
 }
 
-document.querySelectorAll('[data-spin-icon]').forEach(initSpinIcon);
+document.querySelectorAll('[data-bubble]').forEach(initBubble);
 
 function replayIntroAnimation() {
   if (prefersReducedMotion) return;

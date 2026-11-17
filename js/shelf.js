@@ -406,6 +406,7 @@
       hop: clamp(90 + dist * 0.04, 110, 200),
       turn: Math.PI * 2 * (it.cx < cr.width / 2 ? 1 : -1),
     };
+    icon.dispatchEvent(new CustomEvent('bubble:incoming'));
     it.away = true;
     it.target = 0;
     for (const o of everything) if (o !== it) o.wobV += (Math.random() < 0.5 ? -1 : 1) * (1.2 + Math.random() * 1.2);
@@ -448,15 +449,9 @@
     overlay.scene.draw([]);
     overlay.canvas.classList.remove('is-on');
     document.documentElement.classList.remove('is-shelf-flying');
-    // the ring catches it
+    // the bubble catches it: the icon pops in and the shell squashes (js/app.js)
+    f.icon.dispatchEvent(new CustomEvent('bubble:catch'));
     const wrap = f.icon.closest('.category-icon-wrap') || f.icon;
-    wrap.animate([
-      { transform: 'scale(1)' },
-      { transform: 'scale(1.16, 0.86)', offset: 0.22 },
-      { transform: 'scale(0.94, 1.07)', offset: 0.5 },
-      { transform: 'scale(1.02, 0.98)', offset: 0.75 },
-      { transform: 'scale(1)' },
-    ], { duration: 560, easing: 'ease-out' });
     wrap.classList.remove('is-caught');
     void wrap.offsetWidth;
     wrap.classList.add('is-caught');

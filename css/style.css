@@ -425,6 +425,11 @@ a:focus-visible .hover-frame::after {
 .intro-headline > .intro-greeting:last-child { justify-self: start; }
 .intro-photo-wrap { justify-self: center; }
 
+/* No portrait (it's commented out in index.html): the two greetings sit side by side, centered. */
+@media not all and (min-aspect-ratio: 4/5) {
+  .intro-headline:not(:has(.intro-photo)) { grid-template-columns: auto auto; justify-content: center; }
+}
+
 .intro-greeting {
   font-size: clamp(44px, 5.3vw, 96px);
   line-height: 1.1;
@@ -787,27 +792,105 @@ main > .category:focus { outline: none; }
 
 .category-icon-wrap {
   margin: 36px auto 0;
-  perspective: 800px;
   width: fit-content;
 }
 
+/* The section icon floats in a soap bubble. js/app.js runs the physics: the icon drifts
+   and bumps the walls, a click pokes the bubble, and the shelf objects pop in when they land.
+   The back layer sits behind the icon and the shell (rim, glints, sheen) in front of it, so
+   the icon reads as inside. Both get the same squash transform from the script. */
 .category-icon {
-  width: clamp(90px, 11vw, 132px);
-  height: clamp(90px, 11vw, 132px);
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  background: var(--bg-raised);
+  position: relative;
+  width: clamp(96px, 12vw, 140px);
+  height: clamp(96px, 12vw, 140px);
   color: var(--gold); /* the pixel icons fill with currentColor */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* soft shadow on the paper below; the script shrinks it as the bubble bobs up */
+.category-icon::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: -18px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(30, 26, 21, 0.16), rgba(30, 26, 21, 0));
+  transform: scaleX(var(--bubble-shadow, 1));
+  opacity: var(--bubble-shadow, 1);
+  pointer-events: none;
+}
+
+.bubble-back,
+.bubble-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
   will-change: transform;
 }
 
-.category-icon svg {
-  width: 46%;
-  height: 46%;
+.bubble-back {
+  background: radial-gradient(circle at 38% 34%,
+    rgba(255, 255, 255, 0.7),
+    color-mix(in srgb, var(--bg-raised) 55%, transparent) 55%,
+    color-mix(in srgb, var(--gold) 10%, transparent) 100%);
+}
+
+.bubble-shell {
+  z-index: 2;
+  background:
+    radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.95) 0 4.5%, rgba(255, 255, 255, 0) 10%),
+    radial-gradient(ellipse 22% 9% at 33% 22%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0)),
+    radial-gradient(circle at 71% 77%, rgba(255, 255, 255, 0.6) 0 2.5%, rgba(255, 255, 255, 0) 6%),
+    radial-gradient(circle, transparent 60%, color-mix(in srgb, var(--gold) 12%, transparent) 84%, color-mix(in srgb, var(--gold) 28%, transparent) 100%);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--gold) 50%, transparent),
+    inset -7px -11px 20px color-mix(in srgb, var(--plum) 16%, transparent),
+    inset 8px 10px 18px rgba(255, 255, 255, 0.55);
+}
+
+/* the soapy sheen: a ring of color that slowly swirls */
+.bubble-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 20deg, var(--gold), var(--plum), var(--green), #6f8fb0, var(--gold));
+  -webkit-mask: radial-gradient(circle, transparent 66%, #000 82%, #000 100%);
+  mask: radial-gradient(circle, transparent 66%, #000 82%, #000 100%);
+  opacity: 0.24;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bubble-shell::before { animation: bubble-swirl 16s linear infinite; }
+}
+
+@keyframes bubble-swirl { to { transform: rotate(360deg); } }
+
+.bubble-icon {
+  position: absolute;
+  z-index: 1;
+  left: 25%;
+  top: 25%;
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.bubble-icon svg {
+  width: 84%;
+  height: 84%;
   fill: none;
   stroke: var(--gold);
   stroke-width: 2.2;
@@ -815,9 +898,9 @@ main > .category:focus { outline: none; }
   stroke-linejoin: round;
 }
 
-.category-icon svg.icon-pixel {
-  width: 52%;
-  height: 52%;
+.bubble-icon svg.icon-pixel {
+  width: 100%;
+  height: 100%;
   fill: var(--gold);
   stroke: none;
   shape-rendering: crispEdges;
@@ -1822,6 +1905,9 @@ main > .category:focus { outline: none; }
   .intro-greeting { grid-row: auto; white-space: nowrap; }
   .intro-photo { height: clamp(150px, min(34svh, 18vw), 340px); }
 
+  /* No portrait: its column is empty, so drop the gap and the words line up with the wall's edge. */
+  .hero-content:not(:has(.intro-photo)) { column-gap: 0; }
+
   .hero-role {
     grid-column: 2;
     grid-row: 4;
@@ -1835,7 +1921,7 @@ main > .category:focus { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .category-icon { transition: none !important; }
+  .category-icon { cursor: default; }
   .slab,
   .slab-screen img,
   .slab-screen video,
